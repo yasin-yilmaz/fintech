@@ -1,6 +1,7 @@
 import { StatCards } from "@/components/dashboard/stats/StatCards";
 import { RecentTransactionsTable } from "@/components/dashboard/transactions/RecentTransactionsTable";
 import { ScheduledTransfers } from "@/components/dashboard/transfers/ScheduledTransfers";
+import { WalletPanel } from "@/components/dashboard/wallet/WalletPanel";
 
 const DashboardPage = () => {
   return (
@@ -19,8 +20,8 @@ const DashboardPage = () => {
 
       {/* RIGHT / ASIDE (354px ≈ 4/12) */}
       <aside className="col-span-12 grid content-start gap-8 xl:col-span-4">
+        <WalletPanel />
         <ScheduledTransfers />
-        <div className="bg-surface h-90 rounded-2xl" />
       </aside>
     </div>
   );

@@ -19,8 +19,14 @@
   --color-granite: #1b212d;
   --color-granite-dark: #363a3f;
   --color-granite-mid: #4e5257;
+  --color-granite-neutral: #626261;
+  --color-granite-neutral-2: #626260;
   --color-granite-muted: #78778b;
+  --color-granite-muted-2: #868685;
   --color-granite-soft: #d1d5db;
+  --color-granite-charcoal: #3d3d3c;
+
+  --color-stone: #b2aea9;
 
   /* STEEL */
   --color-steel: #929eae;
