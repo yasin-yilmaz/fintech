@@ -46,6 +46,13 @@ export const formatDateTime = (
   locale = enUS,
 ) => formatDate(input, pattern, locale);
 
+/**
+ * Short date label for compact UI (e.g. chart axis).
+ * Default: "MMM dd" -> "Apr 17"
+ */
+export const fmtShortDate = (input: DateInput, locale = enUS) =>
+  formatDate(input, "MMM dd", locale);
+
 export const formatTime = (
   input: DateInput,
   pattern = "HH:mm",

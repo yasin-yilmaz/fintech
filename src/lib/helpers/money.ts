@@ -67,3 +67,71 @@ export const fromMinor = (minor: number, frac: number = 2) => {
   const factor = 10 ** frac;
   return minor / factor;
 };
+
+/**
+ * Format currency with 0 fraction digits (common for dashboards).
+ *
+ * @example
+ * fmt0(4200, "USD") -> "$4,200"
+ * fmt0(4200, "TRY", { locale: "tr-TR" }) -> "₺4.200"
+ */
+export const fmt0 = (
+  amount: number,
+  currency: TCurrency,
+  opts: Omit<TMoneyFormatOptions, "maxFrac"> = {},
+) => fmt(amount, currency, { ...opts, maxFrac: 0 });
+
+type TAbbrOptions = {
+  locale?: string;
+  /**
+   * decimals shown after abbreviation
+   * @default 0
+   */
+  frac?: number;
+  /**
+   * suffixes for thousand/million/billion
+   * @default { k: "K", m: "M", b: "B" }
+   */
+  suffix?: { k?: string; m?: string; b?: string };
+};
+
+/**
+ * Abbreviate large numbers for charts: 1200 -> "1K", 1500000 -> "2M".
+ * (Rounded, configurable decimals.)
+ *
+ * @example
+ * abbr(0) -> "0K" (when min is K) => use abbrK for exact fmtK behavior
+ * abbr(1200) -> "1K"
+ * abbr(1540, { frac: 1 }) -> "1.5K"
+ * abbr(2_600_000) -> "3M"
+ */
+export const abbr = (n: number, opts: TAbbrOptions = {}) => {
+  const { locale = "en-US", frac = 0, suffix } = opts;
+  const sfx = { k: "K", m: "M", b: "B", ...(suffix ?? {}) };
+
+  const abs = Math.abs(n);
+  const sign = n < 0 ? "-" : "";
+
+  const fmtNum = (val: number) =>
+    new Intl.NumberFormat(locale, {
+      maximumFractionDigits: frac,
+      minimumFractionDigits: frac,
+    }).format(val);
+
+  if (abs >= 1_000_000_000)
+    return `${sign}${fmtNum(abs / 1_000_000_000)}${sfx.b}`;
+  if (abs >= 1_000_000) return `${sign}${fmtNum(abs / 1_000_000)}${sfx.m}`;
+  if (abs >= 1_000) return `${sign}${fmtNum(abs / 1_000)}${sfx.k}`;
+
+  // small numbers: no suffix
+  return `${sign}${fmtNum(abs)}`;
+};
+
+/**
+ * Chart helper: replicate your old fmtK exactly.
+ * 0 -> "0K", 4200 -> "4K"
+ */
+export const abbrK = (n: number) => {
+  if (n === 0) return "0K";
+  return `${Math.round(n / 1000)}K`;
+};
