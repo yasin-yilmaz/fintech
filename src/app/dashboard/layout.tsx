@@ -1,8 +1,8 @@
 // app/dashboard/layout.tsx
 import type { ReactNode } from "react";
 
-import { DashboardHeader } from "@/components/dashboard/DashboardHeader";
-import { DashboardSidebar } from "@/components/dashboard/DashboardSidebar";
+import { DashboardHeader } from "@/components/dashboard/header/DashboardHeader";
+import { DashboardSidebar } from "@/components/dashboard/sidebar/DashboardSidebar";
 
 type TProps = {
   children: ReactNode;
