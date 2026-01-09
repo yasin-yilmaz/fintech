@@ -1,3 +1,4 @@
+import { WorkingCapitalChart } from "@/components/dashboard/charts/WorkingCapitalChart";
 import { StatCards } from "@/components/dashboard/stats/StatCards";
 import { RecentTransactionsTable } from "@/components/dashboard/transactions/RecentTransactionsTable";
 import { ScheduledTransfers } from "@/components/dashboard/transfers/ScheduledTransfers";
@@ -11,11 +12,11 @@ const DashboardPage = () => {
         {/* Stats row (3 kart yan yana) */}
         <StatCards />
 
+        {/* Chart */}
+        <WorkingCapitalChart />
+
         {/* Recent Transactions */}
         <RecentTransactionsTable />
-
-        {/* Chart */}
-        <div className="bg-surface h-90 rounded-2xl" />
       </section>
 
       {/* RIGHT / ASIDE (354px ≈ 4/12) */}
