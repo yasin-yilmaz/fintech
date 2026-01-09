@@ -17,6 +17,8 @@
 
   /* Granite */
   --color-granite: #1b212d;
+  --color-granite-dark: #363a3f;
+  --color-granite-mid: #4e5257;
   --color-granite-muted: #78778b;
   --color-granite-soft: #d1d5db;
 
@@ -28,6 +30,8 @@
   --color-accent-dark: #9bcb18;
 
   --color-surface: #fafafa;
+  --color-surface-2: #f8f8f8;
+  --color-surface-warm: #ebe8e8;
   --color-surface-hover: #f3f5f7;
 }
 
