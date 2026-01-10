@@ -28,7 +28,6 @@ export const MastercardLogo = ({
       aria-label={title}
       {...props}
     >
-      {/* Wordmark (white) */}
       <path
         fillRule="evenodd"
         clipRule="evenodd"

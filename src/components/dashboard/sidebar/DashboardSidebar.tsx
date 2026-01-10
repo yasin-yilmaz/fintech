@@ -4,7 +4,6 @@ import {
   ArrowLeftRight,
   HelpCircle,
   Home,
-  LogOut,
   Receipt,
   Settings,
   Wallet,
@@ -17,7 +16,6 @@ import { SidebarNav, type TSidebarNavItem } from "./SidebarNav";
 
 const ACTION_ITEMS = [
   { type: "link" as const, href: "/help", label: "Help", icon: HelpCircle },
-  { type: "button" as const, label: "Logout", icon: LogOut, onClick: () => {} },
 ];
 
 const NAV_ITEMS: TSidebarNavItem[] = [

@@ -1,15 +1,15 @@
 import { faker } from "@faker-js/faker";
 
 export type TWorkingCapitalPoint = {
-  date: string; // YYYY-MM-DD
+  date: string;
   income: number;
   expenses: number;
 };
 
 type Options = {
-  days?: number; // default 365
-  seed?: number; // default 2026
-  endDate?: Date; // default today
+  days?: number;
+  seed?: number;
+  endDate?: Date;
 };
 
 export const genWorkingCapitalData = ({
@@ -25,7 +25,6 @@ export const genWorkingCapitalData = ({
   const start = new Date(end);
   start.setDate(start.getDate() - (days - 1));
 
-  // Basit baz değerler
   let incomeBase = 5200;
   let expenseBase = 4800;
 
@@ -37,11 +36,9 @@ export const genWorkingCapitalData = ({
 
     const date = d.toISOString().slice(0, 10);
 
-    // Hafif drift (çok küçük)
     incomeBase += faker.number.int({ min: -25, max: 25 });
     expenseBase += faker.number.int({ min: -25, max: 25 });
 
-    // Günlük dalgalanma
     const income = Math.max(
       0,
       incomeBase + faker.number.int({ min: -600, max: 600 }),

@@ -65,3 +65,60 @@ export const signinDefaultValues: TSignInFormValues = {
   email: "",
   password: "",
 };
+
+export const loginSuccessSchema = z.object({
+  success: z.literal(true),
+  message: z.string(),
+  data: z.object({
+    user: z.object({
+      fullName: z.string(),
+      email: z.email(),
+      role: z.string(),
+      isActive: z.boolean(),
+      createdAt: z.string(),
+      updatedAt: z.string(),
+      lastLoginAt: z.string().nullable().optional(),
+      lastLoginIP: z.string().nullable().optional(),
+      id: z.string(),
+    }),
+    accessToken: z.string().min(1),
+  }),
+});
+
+export type TLoginSuccess = z.infer<typeof loginSuccessSchema>;
+
+export const loginErrorSchema = z.object({
+  success: z.literal(false),
+  error: z.string().optional(),
+  message: z.string().optional(),
+  code: z.string().optional(),
+  details: z
+    .array(
+      z.object({
+        field: z.string(),
+        message: z.string(),
+        code: z.string().optional(),
+      }),
+    )
+    .optional(),
+});
+
+export type TLoginError = z.infer<typeof loginErrorSchema>;
+
+// LOGOUT
+
+export const logoutSuccessSchema = z.object({
+  success: z.literal(true),
+  message: z.string(),
+});
+
+export type TLogoutSuccess = z.infer<typeof logoutSuccessSchema>;
+
+export const logoutErrorSchema = z.object({
+  success: z.literal(false),
+  error: z.string().optional(),
+  message: z.string().optional(),
+  code: z.string().optional(),
+});
+
+export type TLogoutError = z.infer<typeof logoutErrorSchema>;

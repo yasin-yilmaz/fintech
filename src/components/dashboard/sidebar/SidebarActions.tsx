@@ -1,5 +1,10 @@
-// components/dashboard/SidebarActions.tsx
+"use client";
+
 import type { ElementType } from "react";
+
+import { LogOut } from "lucide-react";
+
+import { useLogout } from "@/hooks/useLogout";
 
 import { SidebarActionItem } from "./SidebarActionItem";
 import { SidebarNavItem } from "./SidebarNavItem";
@@ -11,43 +16,31 @@ type TLinkAction = {
   icon: ElementType;
 };
 
-type TButtonAction = {
-  type: "button";
-  label: string;
-  icon: ElementType;
-  onClick?: () => void;
-};
-
-type TActionItem = TLinkAction | TButtonAction;
+type TActionItem = TLinkAction;
 
 type TProps = {
   items: TActionItem[];
 };
 
 export const SidebarActions = ({ items }: TProps) => {
+  const { logout, isLoggingOut } = useLogout({ redirectTo: "/signin" });
+
   return (
     <div className="space-y-0.5">
-      {items.map((item) => {
-        if (item.type === "link") {
-          return (
-            <SidebarNavItem
-              key={`link-${item.href}`}
-              href={item.href}
-              label={item.label}
-              icon={item.icon}
-            />
-          );
-        }
-
-        return (
-          <SidebarActionItem
-            key={`btn-${item.label}`}
-            label={item.label}
-            icon={item.icon}
-            onClick={item.onClick}
-          />
-        );
-      })}
+      {items.map((item) => (
+        <SidebarNavItem
+          key={`link-${item.href}`}
+          href={item.href}
+          label={item.label}
+          icon={item.icon}
+        />
+      ))}
+      <SidebarActionItem
+        label={isLoggingOut ? "Logging out..." : "Logout"}
+        icon={LogOut}
+        onClick={logout}
+        disabled={isLoggingOut}
+      />
     </div>
   );
 };

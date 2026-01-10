@@ -6,7 +6,8 @@ import { FcGoogle } from "react-icons/fc";
 import { toast } from "sonner";
 import { zodResolver } from "@hookform/resolvers/zod";
 
-import { authApi, AuthApiError } from "@/lib/api/authApi";
+import { signup } from "@/lib/api/auth/actions";
+import { AuthApiError } from "@/lib/api/auth/errors";
 
 import { FormField } from "@/components/form/FormField";
 import { SubmitButton } from "@/components/ui/SubmitButton";
@@ -35,7 +36,7 @@ const SignUpForm = () => {
 
   const onSubmit = async (values: TSignUpFormValues) => {
     try {
-      const res = await authApi.signup(values);
+      const res = await signup(values);
 
       console.log("[authApi.signup] success:", res);
 

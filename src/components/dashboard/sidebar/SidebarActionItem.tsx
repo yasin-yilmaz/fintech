@@ -1,4 +1,3 @@
-// components/dashboard/SidebarActionItem.tsx
 import type { ButtonHTMLAttributes, ElementType } from "react";
 
 import { cn } from "@/lib/utils";

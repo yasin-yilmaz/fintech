@@ -7,6 +7,8 @@ import Image from "next/image";
 
 import { cn } from "@/lib/utils";
 
+import { useLogout } from "@/hooks/useLogout";
+
 type TProps = {
   isOpen: boolean;
   onClose: () => void;
@@ -23,6 +25,11 @@ export const DashboardUserMenu = ({
   className,
 }: TProps) => {
   const panelRef = React.useRef<HTMLDivElement | null>(null);
+
+  const { logout, isLoggingOut } = useLogout({
+    onSuccess: onClose,
+    redirectTo: "/signin",
+  });
 
   React.useEffect(() => {
     if (!isOpen) return;
@@ -80,7 +87,7 @@ export const DashboardUserMenu = ({
           </div>
         </div>
 
-        {/* Items (UI only) */}
+        {/* ITEMS */}
         <div className="p-2">
           {[
             { label: "Profile", icon: User },
@@ -102,11 +109,16 @@ export const DashboardUserMenu = ({
 
           <button
             type="button"
-            onClick={() => {}}
-            className="text-granite hover:bg-surface-hover flex w-full items-center gap-3 rounded-lg px-3 py-2 text-sm"
+            onClick={logout}
+            disabled={isLoggingOut}
+            aria-busy={isLoggingOut ? true : undefined}
+            className={cn(
+              "text-granite hover:bg-surface-hover flex w-full items-center gap-3 rounded-lg px-3 py-2 text-sm",
+              "disabled:cursor-not-allowed disabled:opacity-60",
+            )}
           >
             <LogOut className="text-steel size-4" />
-            <span>Logout</span>
+            <span>{isLoggingOut ? "Logging out..." : "Logout"}</span>
           </button>
         </div>
       </div>

@@ -40,7 +40,6 @@ export const WalletCard = ({
         className,
       )}
     >
-      {/* Soft vignette / depth */}
       <div
         className={cn(
           "pointer-events-none absolute inset-0",

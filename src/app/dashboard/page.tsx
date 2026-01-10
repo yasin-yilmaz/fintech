@@ -7,16 +7,13 @@ import { WalletPanel } from "@/components/dashboard/wallet/WalletPanel";
 const DashboardPage = () => {
   return (
     <section className="grid grid-cols-12 gap-x-9.75 gap-y-8">
+      {/* LEFT */}
       <div className="col-span-12 grid gap-8 xl:col-span-8">
-        {/* Stats */}
         <StatCards />
-
-        {/* Chart */}
         <WorkingCapitalChart />
-
-        {/* Recent Transactions */}
         <RecentTransactionsTable />
       </div>
+      {/* RIGHT */}
       <div className="col-span-12 grid content-start gap-8 xl:col-span-4">
         <WalletPanel />
         <ScheduledTransfers />

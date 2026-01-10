@@ -6,7 +6,8 @@ import { FcGoogle } from "react-icons/fc";
 import { toast } from "sonner";
 import { zodResolver } from "@hookform/resolvers/zod";
 
-import { sleep } from "@/lib/dev/utils";
+import { signin } from "@/lib/api/auth/actions";
+import { AuthApiError } from "@/lib/api/auth/errors";
 
 import { SubmitButton } from "@/components/ui/SubmitButton";
 
@@ -25,6 +26,7 @@ const SignInForm = () => {
   const {
     register,
     handleSubmit,
+    setError,
     formState: { errors, isSubmitting },
   } = useForm<TSignInFormValues>({
     resolver: zodResolver(signInSchema),
@@ -34,20 +36,38 @@ const SignInForm = () => {
 
   const onSubmit = async (values: TSignInFormValues) => {
     try {
-      await sleep(800);
+      const res = await signin(values);
 
-      // test
-      const ok =
-        values.email.toLowerCase() === "demo@gmail.com" &&
-        values.password === "123456";
+      console.log("[signin] success:", res);
+      console.log("[signin] accessToken:", res.data.accessToken);
 
-      if (!ok) {
-        throw new Error("Email or password is incorrect.");
-      }
-
-      toast.success("Signed in successfully.");
+      toast.success(res.message ?? "Signed in successfully.");
       router.push("/dashboard");
     } catch (err) {
+      if (err instanceof AuthApiError) {
+        console.log("[authApi.login] error:", {
+          message: err.message,
+          code: err.code,
+          details: err.details,
+        });
+
+        if (err.code === "VALIDATION_FAILED" && err.details?.length) {
+          err.details.forEach((d) => {
+            const field = d.field as keyof TSignInFormValues | undefined;
+            const message = d.message ?? "Invalid value.";
+
+            if (field && ["email", "password"].includes(field)) {
+              setError(field, { type: "server", message });
+            }
+          });
+        }
+
+        toast.error(err.message);
+        return;
+      }
+
+      console.log("[authApi.login] unknown error:", err);
+
       const message =
         err instanceof Error ? err.message : "Something went wrong.";
       toast.error(message);
