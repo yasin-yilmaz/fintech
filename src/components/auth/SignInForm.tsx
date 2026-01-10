@@ -4,25 +4,20 @@ import { useRouter } from "next/navigation";
 import { useForm } from "react-hook-form";
 import { FcGoogle } from "react-icons/fc";
 import { toast } from "sonner";
-import { z } from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
 
 import { sleep } from "@/lib/dev/utils";
 
 import { SubmitButton } from "@/components/ui/SubmitButton";
 
+import {
+  signinDefaultValues,
+  signInSchema,
+  TSignInFormValues,
+} from "@/schemas/auth.schema";
+
 import { FormField } from "../form/FormField";
 import { AuthSwitchText } from "./AuthSwitchText";
-
-const signInSchema = z.object({
-  email: z.email("Please enter a valid email."),
-
-  password: z
-    .string("Incorrect password.")
-    .min(6, "Password must be at least 6 characters."),
-});
-
-type TSignInFormValues = z.infer<typeof signInSchema>;
 
 const SignInForm = () => {
   const router = useRouter();
@@ -33,10 +28,7 @@ const SignInForm = () => {
     formState: { errors, isSubmitting },
   } = useForm<TSignInFormValues>({
     resolver: zodResolver(signInSchema),
-    defaultValues: {
-      email: "",
-      password: "",
-    },
+    defaultValues: signinDefaultValues,
     mode: "onSubmit",
   });
 

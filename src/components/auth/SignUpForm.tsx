@@ -4,26 +4,20 @@ import { useRouter } from "next/navigation";
 import { useForm } from "react-hook-form";
 import { FcGoogle } from "react-icons/fc";
 import { toast } from "sonner";
-import { z } from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
 
-import { sleep } from "@/lib/dev/utils";
+import { authApi, AuthApiError } from "@/lib/api/authApi";
 
 import { FormField } from "@/components/form/FormField";
 import { SubmitButton } from "@/components/ui/SubmitButton";
 
+import {
+  signupDefaultValues,
+  signUpSchema,
+  TSignUpFormValues,
+} from "@/schemas/auth.schema";
+
 import { AuthSwitchText } from "./AuthSwitchText";
-
-const signUpSchema = z.object({
-  fullName: z
-    .string()
-    .min(2, "Full name must be at least 2 characters.")
-    .max(60),
-  email: z.string().email("Please enter a valid email."),
-  password: z.string().min(6, "Password must be at least 6 characters."),
-});
-
-type TSignUpFormValues = z.infer<typeof signUpSchema>;
 
 const SignUpForm = () => {
   const router = useRouter();
@@ -31,24 +25,47 @@ const SignUpForm = () => {
   const {
     register,
     handleSubmit,
+    setError,
     formState: { errors, isSubmitting },
   } = useForm<TSignUpFormValues>({
     resolver: zodResolver(signUpSchema),
-    defaultValues: { fullName: "", email: "", password: "" },
+    defaultValues: signupDefaultValues,
     mode: "onSubmit",
   });
 
   const onSubmit = async (values: TSignUpFormValues) => {
     try {
-      await sleep(1000);
+      const res = await authApi.signup(values);
 
-      if (values.email.endsWith("@test.com")) {
-        throw new Error("This email domain is not allowed.");
-      }
+      console.log("[authApi.signup] success:", res);
 
-      toast.success("Account created successfully.");
+      toast.success(res.message ?? "Account created successfully.");
       router.push("/signin");
     } catch (err) {
+      if (err instanceof AuthApiError) {
+        console.log("[authApi.signup] error:", {
+          message: err.message,
+          code: err.code,
+          details: err.details,
+        });
+
+        if (err.code === "VALIDATION_FAILED" && err.details?.length) {
+          err.details.forEach((d) => {
+            const field = d.field as keyof TSignUpFormValues | undefined;
+            const message = d.message ?? "Invalid value.";
+
+            if (field && ["fullName", "email", "password"].includes(field)) {
+              setError(field, { type: "server", message });
+            }
+          });
+        }
+
+        toast.error(err.message);
+        return;
+      }
+
+      console.log("[authApi.signup] unknown error:", err);
+
       const message =
         err instanceof Error ? err.message : "Something went wrong.";
       toast.error(message);
@@ -92,9 +109,7 @@ const SignUpForm = () => {
         </SubmitButton>
 
         <SubmitButton
-          onClick={() => {
-            toast.info("Google sign-up is not implemented yet.");
-          }}
+          onClick={() => toast.info("Google sign-up is not implemented yet.")}
           type="button"
           variant="outline"
           disabled={isSubmitting}
