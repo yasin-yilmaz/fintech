@@ -7,24 +7,28 @@ const AUTH_ROUTES = ["/signin", "/signup"];
 const PROTECTED_PREFIXES = ["/dashboard"];
 
 const isAuthRoute = (pathname: string) => AUTH_ROUTES.includes(pathname);
+const isHomeRoute = (pathname: string) => pathname === "/";
 const isProtectedRoute = (pathname: string) =>
   PROTECTED_PREFIXES.some(
     (p) => pathname === p || pathname.startsWith(`${p}/`),
   );
 
-export function middleware(req: NextRequest) {
+export function proxy(req: NextRequest) {
   const { pathname } = req.nextUrl;
 
   const token = req.cookies.get(AUTH_COOKIE)?.value;
   const isLoggedIn = Boolean(token);
 
-  if (isAuthRoute(pathname) && isLoggedIn) {
+  // ✅ Login olmuşsa: auth sayfaları veya anasayfa -> dashboard
+  if (isLoggedIn && (isAuthRoute(pathname) || isHomeRoute(pathname))) {
     const url = req.nextUrl.clone();
     url.pathname = "/dashboard";
+    url.search = ""; // anasayfadaki query vs. temizle
     return NextResponse.redirect(url);
   }
 
-  if (isProtectedRoute(pathname) && !isLoggedIn) {
+  // ✅ Login değilse: protected -> signin
+  if (!isLoggedIn && isProtectedRoute(pathname)) {
     const url = req.nextUrl.clone();
     url.pathname = "/signin";
     url.searchParams.set("next", pathname);
@@ -35,5 +39,5 @@ export function middleware(req: NextRequest) {
 }
 
 export const config = {
-  matcher: ["/signin", "/signup", "/dashboard/:path*"],
+  matcher: ["/", "/signin", "/signup", "/dashboard/:path*"],
 };

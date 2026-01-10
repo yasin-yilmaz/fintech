@@ -122,3 +122,32 @@ export const logoutErrorSchema = z.object({
 });
 
 export type TLogoutError = z.infer<typeof logoutErrorSchema>;
+
+// PROFILE
+
+export const profileSuccessSchema = z.object({
+  success: z.literal(true),
+  data: z.object({
+    fullName: z.string(),
+    email: z.email(),
+    role: z.string(),
+    isActive: z.boolean(),
+    createdAt: z.string(),
+    updatedAt: z.string(),
+    lastLoginAt: z.string().nullable().optional(),
+    lastLoginIP: z.string().nullable().optional(),
+    id: z.string(),
+  }),
+});
+
+export type TProfileSuccess = z.infer<typeof profileSuccessSchema>;
+
+export const profileErrorSchema = z.object({
+  success: z.literal(false),
+  error: z.literal("Unauthorized").optional(),
+  message: z.string().optional(),
+  code: z.literal("TOKEN_MISSING").optional(),
+});
+
+export type TProfileError = z.infer<typeof profileErrorSchema>;
+export type TProfileUser = z.infer<typeof profileSuccessSchema>["data"];

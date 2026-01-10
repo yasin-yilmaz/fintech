@@ -1,24 +1,29 @@
 import type { ReactNode } from "react";
 
+import { getProfile } from "@/lib/api/auth/actions";
+
+import { AuthHydrate } from "@/components/auth/AuthHydrate";
 import { DashboardHeader } from "@/components/dashboard/header/DashboardHeader";
 import { DashboardSidebar } from "@/components/dashboard/sidebar/DashboardSidebar";
 
-type TProps = {
-  children: ReactNode;
-};
+type TProps = { children: ReactNode };
 
-const DashboardLayout = ({ children }: TProps) => {
+const DashboardLayout = async ({ children }: TProps) => {
+  const profile = await getProfile();
+
   return (
-    <div className="min-h-dvh bg-white">
-      <div className="mx-auto grid min-h-dvh grid-cols-1 md:grid-cols-[250px_1fr]">
-        <DashboardSidebar activeKey="dashboard" />
+    <AuthHydrate user={profile.data}>
+      <div className="min-h-dvh bg-white">
+        <div className="mx-auto grid min-h-dvh grid-cols-1 md:grid-cols-[250px_1fr]">
+          <DashboardSidebar activeKey="dashboard" />
 
-        <div className="grid grid-rows-[auto_1fr] pt-7.5">
-          <DashboardHeader title="Dashboard" avatarUrl="/images/user01.png" />
-          <main className="px-10 pb-10.75">{children}</main>
+          <div className="grid grid-rows-[auto_1fr] pt-7.5">
+            <DashboardHeader title="Dashboard" />
+            <main className="px-10 pb-10.75">{children}</main>
+          </div>
         </div>
       </div>
-    </div>
+    </AuthHydrate>
   );
 };
 

@@ -9,10 +9,12 @@ import { cn } from "@/lib/utils";
 
 import { useLogout } from "@/hooks/useLogout";
 
+import type { TProfileUser } from "@/schemas/auth.schema";
+
 type TProps = {
   isOpen: boolean;
   onClose: () => void;
-  userName: string;
+  user: TProfileUser;
   avatarUrl?: string | null;
   className?: string;
 };
@@ -20,7 +22,7 @@ type TProps = {
 export const DashboardUserMenu = ({
   isOpen,
   onClose,
-  userName,
+  user,
   avatarUrl,
   className,
 }: TProps) => {
@@ -60,30 +62,57 @@ export const DashboardUserMenu = ({
       <div
         ref={panelRef}
         className={cn(
-          "absolute top-[calc(100%+12px)] right-0 z-50 w-80",
+          "absolute top-[calc(100%+12px)] right-0 z-50 w-70",
           "bg-surface rounded-xl shadow-sm",
           "ring-granite-soft/60 ring-1",
         )}
       >
         {/* Header */}
-        <div className="border-granite-soft/60 flex items-center gap-3 border-b px-4 py-3">
-          <span className="bg-granite-soft relative size-10 overflow-hidden rounded-full">
-            {avatarUrl ? (
-              <Image
-                src={avatarUrl}
-                alt={userName}
-                fill
-                className="object-cover"
-                sizes="40px"
-              />
-            ) : null}
-          </span>
+        <div className="border-granite-soft/60 border-b px-4 py-3">
+          <div className="flex items-center gap-3">
+            <span className="bg-granite-soft relative size-10 shrink-0 overflow-hidden rounded-full">
+              {avatarUrl ? (
+                <Image
+                  src={avatarUrl}
+                  alt={user.fullName}
+                  fill
+                  className="object-cover"
+                  sizes="40px"
+                />
+              ) : null}
+            </span>
 
-          <div className="min-w-0">
-            <div className="text-granite truncate text-sm font-semibold">
-              {userName}
+            <div className="min-w-0">
+              <div className="text-granite truncate text-sm font-semibold">
+                {user.fullName}
+              </div>
+              <div className="text-steel line-clamp-1 truncate text-xs">
+                {user.email}
+              </div>
             </div>
-            <div className="text-steel text-xs">Account</div>
+          </div>
+
+          {/* meta badges */}
+          <div className="mt-3 flex flex-wrap gap-2">
+            <span
+              className={cn(
+                "inline-flex items-center rounded-full px-2 py-0.5 text-xs font-medium",
+                "bg-surface-cool text-granite ring-border-soft ring-1",
+              )}
+            >
+              {user.role}
+            </span>
+
+            <span
+              className={cn(
+                "inline-flex items-center rounded-full px-2 py-0.5 text-xs font-medium",
+                user.isActive
+                  ? "bg-surface-cool text-granite ring-border-soft ring-1"
+                  : "bg-surface-warm text-granite-muted ring-border-soft ring-1",
+              )}
+            >
+              {user.isActive ? "Active" : "Inactive"}
+            </span>
           </div>
         </div>
 

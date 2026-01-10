@@ -10,12 +10,15 @@ import {
   loginSuccessSchema,
   logoutErrorSchema,
   logoutSuccessSchema,
+  profileErrorSchema,
+  profileSuccessSchema,
   signInSchema,
   signupErrorSchema,
   signUpSchema,
   signupSuccessSchema,
   TLoginSuccess,
   TLogoutSuccess,
+  TProfileSuccess,
   TSignInFormValues,
   TSignUpFormValues,
   TSignupSuccess,
@@ -112,6 +115,39 @@ export const logout = async (): Promise<TLogoutSuccess> => {
           code: parsedErr.data.code,
         });
       }
+      throw new AuthApiError(e.message);
+    }
+
+    throw new AuthApiError("Something went wrong.");
+  }
+};
+
+export const getProfile = async (): Promise<TProfileSuccess> => {
+  const cookieStore = await cookies();
+  const token = cookieStore.get(ACCESS_TOKEN_COOKIE)?.value;
+
+  if (!token) {
+    throw new AuthApiError("An access token is required for authentication.", {
+      code: "TOKEN_MISSING",
+    });
+  }
+
+  try {
+    const res = await apiClient.get<unknown>("/users/profile", {
+      headers: { Authorization: `Bearer ${token}` },
+    });
+
+    return profileSuccessSchema.parse(res);
+  } catch (e) {
+    if (e instanceof ApiError) {
+      const parsed = profileErrorSchema.safeParse(e.payload);
+
+      if (parsed.success) {
+        throw new AuthApiError(parsed.data.message ?? e.message, {
+          code: parsed.data.code,
+        });
+      }
+
       throw new AuthApiError(e.message);
     }
 
