@@ -49,7 +49,7 @@ export const signupErrorSchema = z.object({
 
 export type TSignupError = z.infer<typeof signupErrorSchema>;
 
-//SIGNIN
+// SIGNIN
 
 export const signInSchema = z.object({
   email: z.email("Please enter a valid email."),
@@ -151,3 +151,26 @@ export const profileErrorSchema = z.object({
 
 export type TProfileError = z.infer<typeof profileErrorSchema>;
 export type TProfileUser = z.infer<typeof profileSuccessSchema>["data"];
+
+// REFRESH
+
+export const refreshSuccessSchema = z.object({
+  success: z.literal(true),
+  message: z.string().optional(),
+  data: z.object({
+    accessToken: z.string().min(10),
+  }),
+});
+
+export type TRefreshSuccess = z.infer<typeof refreshSuccessSchema>;
+
+export const refreshErrorSchema = z.object({
+  success: z.literal(false),
+  error: z.string().optional(),
+  message: z.string().optional(),
+  code: z
+    .enum(["TOKEN_MISSING", "TOKEN_INVALID", "TOKEN_EXPIRED", "REFRESH_FAILED"])
+    .optional(),
+});
+
+export type TRefreshError = z.infer<typeof refreshErrorSchema>;

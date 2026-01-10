@@ -19,15 +19,13 @@ export function proxy(req: NextRequest) {
   const token = req.cookies.get(AUTH_COOKIE)?.value;
   const isLoggedIn = Boolean(token);
 
-  // ✅ Login olmuşsa: auth sayfaları veya anasayfa -> dashboard
   if (isLoggedIn && (isAuthRoute(pathname) || isHomeRoute(pathname))) {
     const url = req.nextUrl.clone();
     url.pathname = "/dashboard";
-    url.search = ""; // anasayfadaki query vs. temizle
+    url.search = "";
     return NextResponse.redirect(url);
   }
 
-  // ✅ Login değilse: protected -> signin
   if (!isLoggedIn && isProtectedRoute(pathname)) {
     const url = req.nextUrl.clone();
     url.pathname = "/signin";

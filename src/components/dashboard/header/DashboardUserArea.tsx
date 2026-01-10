@@ -11,7 +11,6 @@ export const DashboardUserArea = () => {
   const user = useAuthStore((s) => s.user);
   const userName = user?.fullName ?? "Account";
 
-  // avatar API'da yok: şimdilik sabit veya undefined
   const avatarUrl = "/images/user01.png";
 
   const [isUserMenuOpen, setIsUserMenuOpen] = React.useState(false);

@@ -1,8 +1,9 @@
 "use server";
 
 import { cookies } from "next/headers";
+import type { z } from "zod";
 
-import { apiClient } from "@/lib/api";
+import { apiClient, apiClientRaw } from "@/lib/api";
 import { ApiError } from "@/lib/apiClient";
 
 import {
@@ -12,44 +13,101 @@ import {
   logoutSuccessSchema,
   profileErrorSchema,
   profileSuccessSchema,
+  refreshErrorSchema,
+  refreshSuccessSchema,
   signInSchema,
   signupErrorSchema,
   signUpSchema,
   signupSuccessSchema,
-  TLoginSuccess,
-  TLogoutSuccess,
-  TProfileSuccess,
-  TSignInFormValues,
-  TSignUpFormValues,
-  TSignupSuccess,
+  type TLoginSuccess,
+  type TLogoutSuccess,
+  type TProfileSuccess,
+  type TRefreshSuccess,
+  type TSignInFormValues,
+  type TSignUpFormValues,
+  type TSignupSuccess,
 } from "@/schemas/auth.schema";
 
 import { AuthApiError } from "./errors";
 
 const ACCESS_TOKEN_COOKIE = "ACCESS_TOKEN";
 
+/** ----- cookie helpers (✅ async) ----- */
+
+const setAccessTokenCookie = async (token: string) => {
+  const cookieStore = await cookies();
+
+  cookieStore.set({
+    name: ACCESS_TOKEN_COOKIE,
+    value: token,
+    httpOnly: true,
+    sameSite: "lax",
+    path: "/",
+    secure: process.env.NODE_ENV === "production",
+  });
+};
+
+const getAccessTokenFromCookie = async () => {
+  const cookieStore = await cookies();
+  return cookieStore.get(ACCESS_TOKEN_COOKIE)?.value;
+};
+
+const deleteAccessTokenCookie = async () => {
+  const cookieStore = await cookies();
+  cookieStore.delete(ACCESS_TOKEN_COOKIE);
+};
+
+/** ----- error helper (no any) ----- */
+
+type TErrorPayloadBase = {
+  message?: string;
+  code?: string;
+  details?: unknown;
+};
+
+const throwAuthApiErrorFrom = <TSchema extends z.ZodType<TErrorPayloadBase>>(
+  err: ApiError,
+  schema: TSchema,
+): never => {
+  const parsed = schema.safeParse(err.payload);
+
+  if (parsed.success) {
+    throw new AuthApiError(parsed.data.message ?? err.message, {
+      code: parsed.data.code,
+      details: parsed.data.details as {
+        field: string;
+        message: string;
+        code?: string | undefined;
+      }[],
+    });
+  }
+
+  throw new AuthApiError(err.message);
+};
+
+const handleApiError = <TSchema extends z.ZodType<TErrorPayloadBase>>(
+  error: unknown,
+  schema: TSchema,
+): never => {
+  if (error instanceof ApiError) return throwAuthApiErrorFrom(error, schema);
+  throw new AuthApiError("Something went wrong.");
+};
+
+/** ----- actions ----- */
+
 export const signup = async (
   body: TSignUpFormValues,
 ): Promise<TSignupSuccess> => {
   const parsedBody = signUpSchema.parse(body);
-
-  console.log(parsedBody);
+  console.log("[signup] body:", parsedBody);
 
   try {
     const res = await apiClient.post<unknown>("/users/register", parsedBody);
-    return signupSuccessSchema.parse(res);
+    const parsed = signupSuccessSchema.parse(res);
+    console.log("[signup] success:", parsed);
+    return parsed;
   } catch (e) {
-    if (e instanceof ApiError) {
-      const parsed = signupErrorSchema.safeParse(e.payload);
-      if (parsed.success) {
-        throw new AuthApiError(parsed.data.message ?? e.message, {
-          code: parsed.data.code,
-          details: parsed.data.details,
-        });
-      }
-      throw new AuthApiError(e.message);
-    }
-    throw new AuthApiError("Something went wrong.");
+    return handleApiError(e, signupErrorSchema);
   }
 };
 
@@ -57,44 +115,35 @@ export const signin = async (
   body: TSignInFormValues,
 ): Promise<TLoginSuccess> => {
   const parsedBody = signInSchema.parse(body);
+  console.log("[signin] body:", parsedBody);
 
   try {
     const res = await apiClient.post<unknown>("/users/login", parsedBody);
     const parsed = loginSuccessSchema.parse(res);
+    console.log("[signin] success:", parsed);
 
-    const cookieStore = await cookies();
-    cookieStore.set({
-      name: ACCESS_TOKEN_COOKIE,
-      value: parsed.data.accessToken,
-      httpOnly: true,
-      sameSite: "lax",
-      path: "/",
-      secure: process.env.NODE_ENV === "production",
-    });
+    await setAccessTokenCookie(parsed.data.accessToken);
+
+    const after = await getAccessTokenFromCookie();
+    console.log("[signin] cookie after set:", Boolean(after));
 
     return parsed;
   } catch (e) {
-    if (e instanceof ApiError) {
-      const parsed = loginErrorSchema.safeParse(e.payload);
-      if (parsed.success) {
-        throw new AuthApiError(parsed.data.message ?? e.message, {
-          code: parsed.data.code,
-          details: parsed.data.details,
-        });
-      }
-      throw new AuthApiError(e.message);
-    }
-    throw new AuthApiError("Something went wrong.");
+    return handleApiError(e, loginErrorSchema);
   }
 };
 
 export const logout = async (): Promise<TLogoutSuccess> => {
-  const cookieStore = await cookies();
-  const token = cookieStore.get(ACCESS_TOKEN_COOKIE)?.value;
+  const token = await getAccessTokenFromCookie();
 
   if (!token) {
-    cookieStore.delete(ACCESS_TOKEN_COOKIE);
-    return { success: true, message: "Logged out successfully." };
+    await deleteAccessTokenCookie();
+    const fallback: TLogoutSuccess = {
+      success: true,
+      message: "Logged out successfully.",
+    };
+    console.log("[logout] no token -> fallback:", fallback);
+    return fallback;
   }
 
   try {
@@ -103,28 +152,20 @@ export const logout = async (): Promise<TLogoutSuccess> => {
     });
 
     const parsed = logoutSuccessSchema.parse(res);
+    console.log("[logout] success:", parsed);
 
-    cookieStore.delete(ACCESS_TOKEN_COOKIE);
+    await deleteAccessTokenCookie();
 
     return parsed;
   } catch (e) {
-    if (e instanceof ApiError) {
-      const parsedErr = logoutErrorSchema.safeParse(e.payload);
-      if (parsedErr.success) {
-        throw new AuthApiError(parsedErr.data.message ?? e.message, {
-          code: parsedErr.data.code,
-        });
-      }
-      throw new AuthApiError(e.message);
-    }
-
+    if (e instanceof ApiError)
+      return throwAuthApiErrorFrom(e, logoutErrorSchema);
     throw new AuthApiError("Something went wrong.");
   }
 };
 
 export const getProfile = async (): Promise<TProfileSuccess> => {
-  const cookieStore = await cookies();
-  const token = cookieStore.get(ACCESS_TOKEN_COOKIE)?.value;
+  const token = await getAccessTokenFromCookie();
 
   if (!token) {
     throw new AuthApiError("An access token is required for authentication.", {
@@ -137,20 +178,41 @@ export const getProfile = async (): Promise<TProfileSuccess> => {
       headers: { Authorization: `Bearer ${token}` },
     });
 
-    return profileSuccessSchema.parse(res);
+    const parsed = profileSuccessSchema.parse(res);
+    console.log("[profile] success:", parsed);
+    return parsed;
   } catch (e) {
-    if (e instanceof ApiError) {
-      const parsed = profileErrorSchema.safeParse(e.payload);
-
-      if (parsed.success) {
-        throw new AuthApiError(parsed.data.message ?? e.message, {
-          code: parsed.data.code,
-        });
-      }
-
-      throw new AuthApiError(e.message);
-    }
-
+    if (e instanceof ApiError)
+      return throwAuthApiErrorFrom(e, profileErrorSchema);
     throw new AuthApiError("Something went wrong.");
+  }
+};
+
+export const refreshAccessToken = async (): Promise<TRefreshSuccess> => {
+  const token = await getAccessTokenFromCookie();
+
+  if (!token) {
+    throw new AuthApiError("An access token is required for authentication.", {
+      code: "TOKEN_MISSING",
+    });
+  }
+
+  try {
+    const res = await apiClientRaw.post<unknown>(
+      "/users/refresh-token",
+      undefined,
+      { headers: { Authorization: `Bearer ${token}` } },
+    );
+
+    const parsed = refreshSuccessSchema.parse(res);
+    console.log("[refresh] success:", parsed);
+
+    await setAccessTokenCookie(parsed.data.accessToken);
+
+    return parsed;
+  } catch (e) {
+    if (e instanceof ApiError)
+      return throwAuthApiErrorFrom(e, refreshErrorSchema);
+    throw new AuthApiError("Token refresh failed.");
   }
 };

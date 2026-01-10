@@ -24,6 +24,27 @@ type TRequestOptions = Omit<RequestInit, "method" | "body"> & {
   body?: unknown;
 };
 
+type TApiClientConfig = {
+  /**
+   * 401 alındığında çalışacak refresh fonksiyonu.
+   * Başarılı olursa cookie güncellenmiş olacak ve aynı request 1 kez retry edilir.
+   */
+  onUnauthorized?: (args: {
+    url: string;
+    path: string;
+    method: THttpMethod;
+  }) => Promise<void>;
+
+  /**
+   * Bu path'lerde refresh denemeyi kapat (örn refresh endpointi).
+   */
+  shouldSkipRefresh?: (args: {
+    path: string;
+    url: string;
+    method: THttpMethod;
+  }) => boolean;
+};
+
 const buildUrl = (
   baseUrl: string,
   path: string,
@@ -54,15 +75,29 @@ const readPayload = async (res: Response): Promise<unknown> => {
   return res.text();
 };
 
+const getErrorMessage = (status: number, payload: unknown) => {
+  const fallback = `Request failed (${status})`;
+
+  if (payload && typeof payload === "object" && "message" in payload) {
+    const maybeMsg = payload.message;
+    return String(maybeMsg ?? fallback);
+  }
+
+  return fallback;
+};
+
 const request = async <T>(args: {
   baseUrl: string;
   method: THttpMethod;
   path: string;
   options?: TRequestOptions;
+  config?: TApiClientConfig;
+  attempt?: number;
 }): Promise<T> => {
-  const { baseUrl, method, path, options } = args;
-  const { params, body, headers, ...init } = options ?? {};
+  const { baseUrl, method, path, options, config } = args;
+  const attempt = args.attempt ?? 0;
 
+  const { params, body, headers, ...init } = options ?? {};
   const url = buildUrl(baseUrl, path, params);
 
   const res = await fetch(url, {
@@ -78,23 +113,38 @@ const request = async <T>(args: {
 
   const payload = await readPayload(res);
 
-  if (!res.ok) {
-    const fallback = `Request failed (${res.status})`;
-    const msg =
-      payload && typeof payload === "object" && "message" in payload
-        ? String(payload.message ?? fallback)
-        : fallback;
+  if (
+    res.status === 401 &&
+    attempt === 0 &&
+    config?.onUnauthorized &&
+    !config?.shouldSkipRefresh?.({ path, url, method })
+  ) {
+    try {
+      await config.onUnauthorized({ url, path, method });
 
+      return request<T>({
+        baseUrl,
+        method,
+        path,
+        options,
+        config,
+        attempt: 1,
+      });
+    } catch {}
+  }
+
+  if (!res.ok) {
+    const msg = getErrorMessage(res.status, payload);
     throw new ApiError({ status: res.status, url, message: msg, payload });
   }
 
   return payload as T;
 };
 
-export const createApiClient = (baseUrl: string) => {
+export const createApiClient = (baseUrl: string, config?: TApiClientConfig) => {
   return {
     get: <T>(path: string, options?: TRequestOptions) =>
-      request<T>({ baseUrl, method: "GET", path, options }),
+      request<T>({ baseUrl, method: "GET", path, options, config }),
 
     post: <T>(path: string, body?: unknown, options?: TRequestOptions) =>
       request<T>({
@@ -102,6 +152,7 @@ export const createApiClient = (baseUrl: string) => {
         method: "POST",
         path,
         options: { ...(options ?? {}), body },
+        config,
       }),
 
     put: <T>(path: string, body?: unknown, options?: TRequestOptions) =>
@@ -110,6 +161,7 @@ export const createApiClient = (baseUrl: string) => {
         method: "PUT",
         path,
         options: { ...(options ?? {}), body },
+        config,
       }),
 
     patch: <T>(path: string, body?: unknown, options?: TRequestOptions) =>
@@ -118,9 +170,10 @@ export const createApiClient = (baseUrl: string) => {
         method: "PATCH",
         path,
         options: { ...(options ?? {}), body },
+        config,
       }),
 
     del: <T>(path: string, options?: TRequestOptions) =>
-      request<T>({ baseUrl, method: "DELETE", path, options }),
+      request<T>({ baseUrl, method: "DELETE", path, options, config }),
   } as const;
 };
