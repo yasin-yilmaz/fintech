@@ -32,24 +32,28 @@ type Props = {
   activeKey?: string;
 };
 
-export const DashboardSidebar = ({ activeKey = "dashboard" }: Props) => {
+export const DashboardSidebarContent = ({ activeKey = "dashboard" }: Props) => {
   return (
-    <aside className="hidden bg-[#FAFAFA] md:block">
-      <div className="sticky top-0 flex h-dvh w-62.5 flex-col px-6.25 py-7.5">
-        <div className="flex items-center">
-          <Logo className="h-7.5 w-27 bg-[#1B212D]" />
-        </div>
+    <div className="sticky top-0 flex h-dvh w-62.5 flex-col px-6.25 py-7.5">
+      <div className="flex items-center">
+        <Logo className="bg-granite h-7.5 w-27" />
+      </div>
 
-        <div className="mt-10 flex flex-1 flex-col">
-          <SidebarNav items={NAV_ITEMS} activeKey={activeKey} />
+      <div className="mt-10 flex flex-1 flex-col">
+        <SidebarNav items={NAV_ITEMS} activeKey={activeKey} />
 
-          <div className="mt-auto pb-10">
-            <div className="mt-auto pb-10">
-              <SidebarActions items={ACTION_ITEMS} />
-            </div>
-          </div>
+        <div className="mt-auto pb-10">
+          <SidebarActions items={ACTION_ITEMS} />
         </div>
       </div>
+    </div>
+  );
+};
+
+export const DashboardSidebar = ({ activeKey = "dashboard" }: Props) => {
+  return (
+    <aside className="bg-surface-2 hidden md:block">
+      <DashboardSidebarContent activeKey={activeKey} />
     </aside>
   );
 };

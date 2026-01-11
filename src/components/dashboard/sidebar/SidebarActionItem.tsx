@@ -2,6 +2,8 @@ import type { ButtonHTMLAttributes, ElementType } from "react";
 
 import { cn } from "@/lib/utils";
 
+import { useUIStore } from "@/store/ui.store";
+
 type TProps = {
   label: string;
   icon: ElementType;
@@ -13,8 +15,10 @@ export const SidebarActionItem = ({
   className,
   ...props
 }: TProps) => {
+  const closeSidebar = useUIStore((state) => state.closeSidebar);
   return (
     <button
+      onClick={closeSidebar}
       type="button"
       {...props}
       className={cn(

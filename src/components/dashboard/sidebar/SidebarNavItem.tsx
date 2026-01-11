@@ -4,6 +4,8 @@ import Link from "next/link";
 
 import { cn } from "@/lib/utils";
 
+import { useUIStore } from "@/store/ui.store";
+
 type TProps = {
   label: string;
   icon: React.ElementType;
@@ -16,9 +18,12 @@ export const SidebarNavItem = ({
   isActive = false,
   ...props
 }: TProps) => {
+  const closeSidebar = useUIStore((s) => s.closeSidebar);
+
   return (
     <Link
       {...props}
+      onClick={() => closeSidebar()}
       className={cn(
         "flex h-12 items-center gap-4 rounded-lg px-4 py-2 transition",
         isActive
