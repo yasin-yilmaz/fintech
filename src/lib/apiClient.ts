@@ -25,19 +25,12 @@ type TRequestOptions = Omit<RequestInit, "method" | "body"> & {
 };
 
 type TApiClientConfig = {
-  /**
-   * 401 alındığında çalışacak refresh fonksiyonu.
-   * Başarılı olursa cookie güncellenmiş olacak ve aynı request 1 kez retry edilir.
-   */
   onUnauthorized?: (args: {
     url: string;
     path: string;
     method: THttpMethod;
   }) => Promise<void>;
 
-  /**
-   * Bu path'lerde refresh denemeyi kapat (örn refresh endpointi).
-   */
   shouldSkipRefresh?: (args: {
     path: string;
     url: string;

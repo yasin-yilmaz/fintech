@@ -33,6 +33,8 @@
 
   /* Accent */
   --color-accent: #c8ee44;
+  --color-accent-emerald: #29a073;
+  --color-accent-emerald-hover: #1f7f58;
   --color-accent-dark: #9bcb18;
 
   --color-surface: #fafafa;

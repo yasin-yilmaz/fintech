@@ -1,3 +1,4 @@
+import type { Locale } from "date-fns";
 import {
   addDays,
   addMonths,
@@ -16,6 +17,7 @@ import {
 import { enUS } from "date-fns/locale";
 
 export type DateInput = Date | string | number;
+export type DateLocale = Locale;
 
 export const toDate = (input: DateInput): Date | null => {
   const d =
@@ -33,7 +35,7 @@ export const currentYear = new Date().getFullYear();
 export const formatDate = (
   input: DateInput,
   pattern = "dd.MM.yyyy",
-  locale = enUS,
+  locale: DateLocale = enUS, // ✅ default enUS
 ) => {
   const d = toDate(input);
   if (!d) return "";
@@ -43,23 +45,23 @@ export const formatDate = (
 export const formatDateTime = (
   input: DateInput,
   pattern = "dd.MM.yyyy HH:mm",
-  locale = enUS,
+  locale: DateLocale = enUS,
 ) => formatDate(input, pattern, locale);
 
 /**
  * Short date label for compact UI (e.g. chart axis).
  * Default: "MMM dd" -> "Apr 17"
  */
-export const fmtShortDate = (input: DateInput, locale = enUS) =>
+export const fmtShortDate = (input: DateInput, locale: DateLocale = enUS) =>
   formatDate(input, "MMM dd", locale);
 
 export const formatTime = (
   input: DateInput,
   pattern = "HH:mm",
-  locale = enUS,
+  locale: DateLocale = enUS,
 ) => formatDate(input, pattern, locale);
 
-export const timeAgo = (input: DateInput, locale = enUS) => {
+export const timeAgo = (input: DateInput, locale: DateLocale = enUS) => {
   const d = toDate(input);
   if (!d) return "";
   return formatDistanceToNow(d, { addSuffix: true, locale });
@@ -114,4 +116,30 @@ export const diffMinutes = (a: DateInput, b: DateInput) => {
   const d2 = toDate(b);
   if (!d1 || !d2) return null;
   return differenceInMinutes(d1, d2);
+};
+
+/**
+ * UI-friendly date label (e.g. "14 Apr 2022" or TR locale with "14 Nis 2022")
+ * Default locale: enUS
+ * Default pattern: "dd MMM yyyy"
+ */
+export const fmtDateLabel = (
+  input: DateInput,
+  locale: DateLocale = enUS,
+  pattern = "dd MMM yyyy",
+) => formatDate(input, pattern, locale);
+
+/**
+ * UI-friendly date-time label (e.g. "April 28, 2022 at 11:00")
+ * Default locale: enUS
+ */
+export const fmtDateTimeLabel = (
+  input: DateInput,
+  locale: DateLocale = enUS,
+) => {
+  const d = toDate(input);
+  if (!d) return "";
+  const date = format(d, "MMMM dd, yyyy", { locale });
+  const time = format(d, "HH:mm", { locale });
+  return `${date} at ${time}`;
 };

@@ -12,32 +12,45 @@ import {
   YAxis,
 } from "recharts";
 
-import { fmtShortDate } from "@/lib/helpers/date";
 import { abbrK } from "@/lib/helpers/money";
 import { cn } from "@/lib/utils";
 
-import type { TRangeKey } from "@/components/ui/RangeSelect";
-
-import { WORKING_CAPITAL_DATA } from "./workingCapital.data";
+import type { TWorkingCapitalView } from "./workingCapital.types";
 import { WorkingCapitalCursor } from "./WorkingCapitalCursor";
 import { WorkingCapitalHeader } from "./WorkingCapitalHeader";
 import { WorkingCapitalTooltip } from "./WorkingCapitalTooltip";
 
-const RANGE_DAYS: Record<TRangeKey, number> = {
-  "7d": 7,
-  "3m": 90,
-  "6m": 180,
-  "1y": 365,
+type Props = {
+  view: TWorkingCapitalView;
+  className?: string;
 };
 
-export const WorkingCapitalChart = ({ className }: { className?: string }) => {
-  const [range, setRange] = React.useState<TRangeKey>("7d");
-  const days = RANGE_DAYS[range];
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+const ActiveDot = (props: any) => {
+  const { cx, cy, r, fill, stroke, strokeWidth } = props;
+  if (cx == null || cy == null) return null;
 
-  const chartData = React.useMemo(() => {
-    if (WORKING_CAPITAL_DATA.length <= days) return WORKING_CAPITAL_DATA;
-    return WORKING_CAPITAL_DATA.slice(-days);
-  }, [days]);
+  return (
+    <circle
+      cx={cx}
+      cy={cy}
+      r={r ?? 5}
+      fill={fill}
+      stroke={stroke}
+      strokeWidth={strokeWidth}
+      filter="url(#wc-dot-shadow)"
+    />
+  );
+};
+
+export const WorkingCapitalChart = ({ view, className }: Props) => {
+  const data = React.useMemo(() => view.points ?? [], [view.points]);
+
+  const yMax = React.useMemo(() => {
+    const max = data.reduce((m, p) => Math.max(m, p.income, p.expense), 0);
+    const padded = Math.ceil(max * 1.1);
+    return padded > 0 ? padded : 10_000;
+  }, [data]);
 
   return (
     <section
@@ -46,14 +59,32 @@ export const WorkingCapitalChart = ({ className }: { className?: string }) => {
         className,
       )}
     >
-      <WorkingCapitalHeader range={range} onRangeChange={setRange} />
+      <WorkingCapitalHeader />
 
       <div className="h-60 overflow-visible">
         <ResponsiveContainer width="100%" height="100%">
           <LineChart
-            data={chartData}
+            data={data}
             margin={{ top: 10, right: 10, left: 0, bottom: 0 }}
           >
+            <defs>
+              <filter
+                id="wc-dot-shadow"
+                x="-50%"
+                y="-50%"
+                width="200%"
+                height="200%"
+                colorInterpolationFilters="sRGB"
+              >
+                <feDropShadow
+                  dx="0"
+                  dy="4"
+                  stdDeviation="4"
+                  floodColor="#686868"
+                  floodOpacity="0.24"
+                />
+              </filter>
+            </defs>
             <CartesianGrid
               vertical
               horizontal={false}
@@ -62,30 +93,29 @@ export const WorkingCapitalChart = ({ className }: { className?: string }) => {
             />
 
             <YAxis
-              width={38}
+              width={46}
               tickMargin={10}
               axisLine={false}
               tickLine={false}
               tick={{ fill: "var(--color-steel)", fontSize: 12 }}
-              domain={[0, 10000]}
-              ticks={[0, 3000, 5000, 7000, 10000]}
+              domain={[0, yMax]}
               tickFormatter={abbrK}
             />
 
             <XAxis
-              dataKey="date"
+              dataKey="month"
               axisLine={false}
               tickLine={false}
               interval="preserveStartEnd"
-              minTickGap={28}
+              minTickGap={18}
               tick={{ fill: "var(--color-steel)", fontSize: 12 }}
-              tickFormatter={(v) => fmtShortDate(v)}
             />
 
             <Tooltip
-              content={(props) => <WorkingCapitalTooltip {...props} />}
+              content={(props) => (
+                <WorkingCapitalTooltip {...props} currency={view.currency} />
+              )}
               cursor={<WorkingCapitalCursor />}
-              position={{ x: 0, y: 0 }}
               wrapperStyle={{
                 outline: "none",
                 zIndex: 50,
@@ -96,24 +126,33 @@ export const WorkingCapitalChart = ({ className }: { className?: string }) => {
             <Line
               type="monotone"
               dataKey="income"
-              stroke="#0F9D6A"
+              stroke="var(--color-accent-emerald)"
               strokeWidth={2}
               dot={false}
-              activeDot={{
-                r: 5,
-                fill: "#6D5EF5",
-                stroke: "white",
-                strokeWidth: 2,
-              }}
+              activeDot={
+                <ActiveDot
+                  r={5}
+                  fill="var(--color-accent-emerald)"
+                  stroke="white"
+                  strokeWidth={2}
+                />
+              }
             />
 
             <Line
               type="monotone"
-              dataKey="expenses"
+              dataKey="expense"
               stroke="var(--color-accent)"
               strokeWidth={2}
               dot={false}
-              activeDot={false}
+              activeDot={
+                <ActiveDot
+                  r={5}
+                  fill="var(--color-accent)"
+                  stroke="white"
+                  strokeWidth={2}
+                />
+              }
             />
           </LineChart>
         </ResponsiveContainer>

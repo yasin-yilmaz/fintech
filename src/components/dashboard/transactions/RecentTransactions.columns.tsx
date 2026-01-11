@@ -1,9 +1,11 @@
 import * as React from "react";
 
-import Image from "next/image";
 import type { ColumnDef } from "@tanstack/react-table";
 
+import { fmtMoney } from "@/lib/helpers/money";
 import { cn } from "@/lib/utils";
+
+import { BrandLogo } from "@/components/ui/BrandLogo";
 
 import type { TRecentTransactionRow } from "./recentTransactions.types";
 
@@ -24,8 +26,6 @@ const TableHeaderLabel = ({
   </span>
 );
 
-const formatMoney = (v: number) => `$${v.toFixed(2)}`;
-
 export const recentTransactionsColumns: ColumnDef<TRecentTransactionRow>[] = [
   {
     id: "name",
@@ -37,8 +37,8 @@ export const recentTransactionsColumns: ColumnDef<TRecentTransactionRow>[] = [
         <div className="flex items-center gap-4">
           <div className="bg-surface-2 relative grid size-10 place-items-center overflow-hidden rounded-xl">
             {r.logo.type === "image" ? (
-              <Image
-                src={r?.logo?.src ?? "/images/brand/placeholder.png"}
+              <BrandLogo
+                src={r?.logo?.src}
                 alt={r?.logo?.alt ?? r.title}
                 fill
                 className="object-contain"
@@ -70,11 +70,14 @@ export const recentTransactionsColumns: ColumnDef<TRecentTransactionRow>[] = [
   {
     accessorKey: "amount",
     header: () => <TableHeaderLabel>AMOUNT</TableHeaderLabel>,
-    cell: ({ getValue }) => (
-      <span className="text-granite text-sm font-semibold">
-        {formatMoney(Number(getValue()))}
-      </span>
-    ),
+    cell: ({ row, getValue }) => {
+      const amount = Number(getValue());
+      return (
+        <span className="text-granite text-sm font-semibold">
+          {fmtMoney(amount, row.original.currency)}
+        </span>
+      );
+    },
   },
   {
     accessorKey: "date",

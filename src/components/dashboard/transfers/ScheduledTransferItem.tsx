@@ -1,7 +1,7 @@
-import Image from "next/image";
-
 import { fmtSigned } from "@/lib/helpers/money";
 import { cn } from "@/lib/utils";
+
+import { AvatarImage } from "@/components/ui/AvatarImage";
 
 import type { TTransferItem } from "./scheduledTransfers.types";
 
@@ -24,12 +24,13 @@ export const ScheduledTransferItem = ({ item, className, onClick }: Props) => {
       >
         <div className="flex min-w-0 items-center gap-3.75">
           <span className="bg-granite-soft relative size-10 shrink-0 overflow-hidden rounded-full">
-            <Image
+            <AvatarImage
               src={item.avatarSrc}
               alt={item.name}
               fill
               className="object-cover"
               sizes="40px"
+              fallbackSrc="/images/users/avatar-placeholder.png"
             />
           </span>
 

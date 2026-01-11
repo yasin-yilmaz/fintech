@@ -1,5 +1,8 @@
 import { CreditCard, PiggyBank, Wallet } from "lucide-react";
 
+import { getFinancialSummary } from "@/lib/api/financial/actions";
+import { fmtMoney } from "@/lib/helpers/money";
+
 import { StatCard } from "./StatCard";
 
 type TStatItem = {
@@ -10,25 +13,28 @@ type TStatItem = {
   isPrimary?: boolean;
 };
 
-export const StatCards = () => {
+export const StatCards = async () => {
+  const res = await getFinancialSummary();
+  const d = res.data;
+
   const items: TStatItem[] = [
     {
       key: "total-balance",
       title: "Total balance",
-      value: "$5240.21",
+      value: fmtMoney(d.totalBalance.amount, d.totalBalance.currency),
       icon: Wallet,
       isPrimary: true,
     },
     {
       key: "total-spending",
       title: "Total spending",
-      value: "$250.80",
+      value: fmtMoney(d.totalExpense.amount, d.totalExpense.currency),
       icon: CreditCard,
     },
     {
       key: "total-saved",
       title: "Total saved",
-      value: "$550.25",
+      value: fmtMoney(d.totalSavings.amount, d.totalSavings.currency),
       icon: PiggyBank,
     },
   ];

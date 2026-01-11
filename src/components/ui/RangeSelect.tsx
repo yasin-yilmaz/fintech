@@ -1,7 +1,8 @@
 "use client";
 
-import * as React from "react";
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
+
+import { ChevronDown } from "lucide-react";
 
 import { cn } from "@/lib/utils";
 
@@ -15,8 +16,11 @@ export const RANGE_LABEL: Record<TRangeKey, string> = {
 };
 
 type Props = {
-  value: TRangeKey;
-  onChange: (v: TRangeKey) => void;
+  value?: TRangeKey;
+  onChange?: (v: TRangeKey) => void;
+
+  defaultValue?: TRangeKey;
+
   options?: readonly TRangeKey[];
   className?: string;
 };
@@ -24,11 +28,18 @@ type Props = {
 export const RangeSelect = ({
   value,
   onChange,
+  defaultValue = "6m",
   options = ["7d", "3m", "6m", "1y"],
   className,
 }: Props) => {
   const [isOpen, setIsOpen] = useState(false);
-  const rootRef = React.useRef<HTMLDivElement | null>(null);
+  const rootRef = useRef<HTMLDivElement | null>(null);
+
+  const isControlled = value != null;
+
+  const [internalValue, setInternalValue] = useState<TRangeKey>(defaultValue);
+
+  const currentValue = (isControlled ? value : internalValue) as TRangeKey;
 
   useEffect(() => {
     if (!isOpen) return;
@@ -52,32 +63,41 @@ export const RangeSelect = ({
     };
   }, [isOpen]);
 
+  const selectValue = (key: TRangeKey) => {
+    if (isControlled) {
+      onChange?.(key);
+    } else {
+      setInternalValue(key);
+      onChange?.(key);
+    }
+    setIsOpen(false);
+  };
+
   return (
     <div ref={rootRef} className={cn("relative", className)}>
       <button
         type="button"
         onClick={() => setIsOpen((v) => !v)}
-        className="bg-surface hover:bg-surface-hover text-granite flex items-center gap-2 rounded-xl px-3 py-2 text-xs font-semibold transition-colors"
+        className="bg-surface-2 hover:bg-surface-hover text-granite flex min-w-[150px] items-center justify-between gap-2 rounded-[5px] py-2 pr-2 pl-2.5 text-xs font-semibold transition-colors"
         aria-haspopup="menu"
         aria-expanded={isOpen}
       >
-        {RANGE_LABEL[value]}
-        <span className="text-steel">▾</span>
+        {RANGE_LABEL[currentValue]}
+        <span className="text-granite">
+          <ChevronDown />
+        </span>
       </button>
 
       {isOpen ? (
         <div className="bg-surface ring-border-soft absolute top-[calc(100%+10px)] right-0 z-50 w-44 rounded-xl p-1 shadow-sm ring-1">
           {options.map((key) => {
-            const isActive = key === value;
+            const isActive = key === currentValue;
 
             return (
               <button
                 key={key}
                 type="button"
-                onClick={() => {
-                  onChange(key);
-                  setIsOpen(false);
-                }}
+                onClick={() => selectValue(key)}
                 className={cn(
                   "text-granite flex w-full items-center justify-between rounded-lg px-3 py-2 text-left text-xs font-semibold transition-colors",
                   "hover:bg-surface-hover",

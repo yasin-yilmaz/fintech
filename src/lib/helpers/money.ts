@@ -1,9 +1,37 @@
-export type TCurrency = "USD" | "EUR" | "TRY";
+import { getLocaleForCurrency } from "@/lib/helpers/currencyLocale";
+
+export type TCurrency = "USD" | "EUR" | "TRY" | "GBP" | string;
 export type TMoneyFlow = "income" | "outcome";
 
 export type TMoneyFormatOptions = {
   locale?: string;
   maxFrac?: number;
+};
+
+export const fmtMoney = (
+  amount: number,
+  currency: string,
+  locale?: string,
+  maximumFractionDigits = 2,
+  currencyDisplay: Intl.NumberFormatOptions["currencyDisplay"] = "symbol",
+) => {
+  const value = Number(amount);
+  const cur = String(currency ?? "").trim();
+
+  if (!Number.isFinite(value)) return "";
+
+  const resolvedLocale = locale ?? getLocaleForCurrency(cur, "en-US");
+
+  try {
+    return new Intl.NumberFormat(resolvedLocale, {
+      style: "currency",
+      currency: cur,
+      currencyDisplay,
+      maximumFractionDigits,
+    }).format(value);
+  } catch {
+    return `${value.toLocaleString(resolvedLocale)} ${cur}`;
+  }
 };
 
 /**
@@ -134,4 +162,14 @@ export const abbr = (n: number, opts: TAbbrOptions = {}) => {
 export const abbrK = (n: number) => {
   if (n === 0) return "0K";
   return `${Math.round(n / 1000)}K`;
+};
+
+export const normalizeCurrency = (currency: string) => {
+  const v = String(currency ?? "").trim();
+  if (!v) return "";
+  if (v === "$") return "USD";
+  if (v === "₺") return "TRY";
+  if (v === "€") return "EUR";
+  if (v === "£") return "GBP";
+  return v;
 };

@@ -1,34 +1,32 @@
 import { cn } from "@/lib/utils";
 
-import { RangeSelect, type TRangeKey } from "@/components/ui/RangeSelect";
+import { RangeSelect } from "@/components/ui/RangeSelect";
 
 const LegendDot = ({ className }: { className?: string }) => (
   <span className={cn("inline-block size-2 rounded-full", className)} />
 );
 
-type Props = {
-  range: TRangeKey;
-  onRangeChange: (v: TRangeKey) => void;
-};
-
-export const WorkingCapitalHeader = ({ range, onRangeChange }: Props) => {
+export const WorkingCapitalHeader = () => {
   return (
-    <div className="mb-5 flex items-center justify-between gap-4">
-      <h3 className="text-granite text-base font-semibold">Working Capital</h3>
+    <div className="mb-5 flex items-start justify-between gap-4">
+      <div>
+        <h3 className="text-granite text-base font-semibold">
+          Working Capital
+        </h3>
+      </div>
 
-      <div className="flex items-center gap-6">
-        <div className="flex items-center gap-5">
+      <div className="flex items-center gap-18">
+        <div className="flex items-center gap-7.5">
           <div className="text-granite-muted flex items-center gap-2 text-xs font-medium">
-            <LegendDot className="bg-emerald-600" />
+            <LegendDot className="bg-(--color-accent-emerald)" />
             Income
           </div>
           <div className="text-granite-muted flex items-center gap-2 text-xs font-medium">
-            <LegendDot className="bg-accent" />
-            Expenses
+            <LegendDot className="bg-(--color-accent)" />
+            Expense
           </div>
         </div>
-
-        <RangeSelect value={range} onChange={onRangeChange} />
+        <RangeSelect defaultValue="7d" />
       </div>
     </div>
   );

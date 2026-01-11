@@ -15,6 +15,7 @@ export type TRecentTransactionRow = {
   business: string;
   type: string;
   amount: number;
+  currency: string;
   date: string;
   logo: TRecentTransactionLogo;
 };
