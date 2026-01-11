@@ -1,7 +1,8 @@
-import { CreditCard, PiggyBank, Wallet } from "lucide-react";
-
 import { getFinancialSummary } from "@/lib/api/financial/actions";
 import { fmtMoney } from "@/lib/helpers/money";
+
+import { WalletAddIcon } from "@/components/icons/WalletAddIcon";
+import { WalletIcon } from "@/components/icons/WalletIcon";
 
 import { StatCard } from "./StatCard";
 
@@ -22,20 +23,20 @@ export const StatCards = async () => {
       key: "total-balance",
       title: "Total balance",
       value: fmtMoney(d.totalBalance.amount, d.totalBalance.currency),
-      icon: Wallet,
+      icon: WalletIcon,
       isPrimary: true,
     },
     {
       key: "total-spending",
       title: "Total spending",
       value: fmtMoney(d.totalExpense.amount, d.totalExpense.currency),
-      icon: CreditCard,
+      icon: WalletIcon,
     },
     {
       key: "total-saved",
       title: "Total saved",
       value: fmtMoney(d.totalSavings.amount, d.totalSavings.currency),
-      icon: PiggyBank,
+      icon: WalletAddIcon,
     },
   ];
 

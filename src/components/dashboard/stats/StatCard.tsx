@@ -20,8 +20,15 @@ export const StatCard = ({
   return (
     <div
       className={cn(
-        "min-h-26.25 rounded-[10px] px-5 py-6",
+        "group min-h-26.25 rounded-[10px] px-5 py-6",
+        "transition-transform duration-200 ease-out will-change-transform",
+        "hover:-translate-y-0.5",
+        "focus-within:-translate-y-0.5",
         isPrimary ? "bg-granite-dark" : "bg-surface-2",
+        // shadow (hover)
+        isPrimary
+          ? "hover:shadow-lg hover:shadow-black/20"
+          : "hover:shadow-lg hover:shadow-black/10",
         className,
       )}
     >
@@ -29,12 +36,15 @@ export const StatCard = ({
         <div
           className={cn(
             "grid size-10.5 place-items-center rounded-full",
+            "transition-transform duration-200 ease-out",
+            "group-focus-within:scale-[1.06] group-hover:scale-[1.06]",
             isPrimary ? "bg-granite-mid" : "bg-surface-warm",
           )}
         >
           <Icon
             className={cn(
-              "size-5",
+              "size-5 transition-transform duration-200 ease-out",
+              "group-focus-within:scale-[1.04] group-hover:scale-[1.04]",
               isPrimary ? "text-accent" : "text-granite-dark",
             )}
           />
