@@ -1,34 +1,31 @@
 "use client";
 
-import {
-  ArrowLeftRight,
-  HelpCircle,
-  Home,
-  Receipt,
-  Settings,
-  Wallet,
-} from "lucide-react";
-
 import { Logo } from "@/components/brand/Logo";
+import { HelpIcon } from "@/components/icons/HelpIcon";
+import { HomeIcon } from "@/components/icons/HomeIcon";
+import { InvoicesIcon } from "@/components/icons/InvoicesIcon";
+import { SettingsIcon } from "@/components/icons/SettingsIcon";
+import { TransactionsIcon } from "@/components/icons/TransactionsIcon";
+import { WalletsIcon } from "@/components/icons/WalletsIcon";
 
 import { SidebarActions } from "./SidebarActions";
 import { SidebarNav, type TSidebarNavItem } from "./SidebarNav";
 
 const ACTION_ITEMS = [
-  { type: "link" as const, href: "/help", label: "Help", icon: HelpCircle },
+  { type: "link" as const, href: "/help", label: "Help", icon: HelpIcon },
 ];
 
 const NAV_ITEMS: TSidebarNavItem[] = [
-  { key: "dashboard", label: "Dashboard", href: "/dashboard", icon: Home },
+  { key: "dashboard", label: "Dashboard", href: "/dashboard", icon: HomeIcon },
   {
     key: "transactions",
     label: "Transactions",
     href: "#",
-    icon: ArrowLeftRight,
+    icon: TransactionsIcon,
   },
-  { key: "invoices", label: "Invoices", href: "#", icon: Receipt },
-  { key: "wallets", label: "My Wallets", href: "#", icon: Wallet },
-  { key: "settings", label: "Settings", href: "#", icon: Settings },
+  { key: "invoices", label: "Invoices", href: "#", icon: InvoicesIcon },
+  { key: "wallets", label: "My Wallets", href: "#", icon: WalletsIcon },
+  { key: "settings", label: "Settings", href: "#", icon: SettingsIcon },
 ];
 
 type Props = {
