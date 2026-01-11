@@ -32,7 +32,7 @@ export const IconButton = ({
     <button
       type={type}
       className={cn(
-        "grid place-items-center rounded-full transition-colors disabled:pointer-events-none disabled:opacity-50",
+        "grid cursor-pointer place-items-center rounded-full transition-colors disabled:pointer-events-none disabled:opacity-50",
         sizeClass,
         variantClass,
         className,

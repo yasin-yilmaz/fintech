@@ -2,12 +2,12 @@
 
 import * as React from "react";
 
-import { Bell, Search } from "lucide-react";
-
 import { cn } from "@/lib/utils";
 
 import { DashboardNotificationsMenu } from "@/components/dashboard/header/menus/DashboardNotificationsMenu";
 import { DashboardSearchMenu } from "@/components/dashboard/header/menus/DashboardSearchMenu";
+import { NotificationsIcon } from "@/components/icons/NotificationsIcon";
+import { SearchIcon } from "@/components/icons/SearchIcon";
 import { IconButton } from "@/components/ui/IconButton";
 
 type TProps = {
@@ -32,10 +32,14 @@ export const DashboardHeaderActions = ({ className }: TProps) => {
   return (
     <div className={cn("relative", className)}>
       <div className="flex items-center gap-11.25">
-        <IconButton aria-label="Search" icon={Search} onClick={toggleSearch} />
+        <IconButton
+          aria-label="Search"
+          icon={SearchIcon}
+          onClick={toggleSearch}
+        />
         <IconButton
           aria-label="Notifications"
-          icon={Bell}
+          icon={NotificationsIcon}
           onClick={toggleNotifications}
         />
       </div>
