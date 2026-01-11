@@ -28,7 +28,7 @@ export const WalletPanel = async () => {
         <ViewAllLink href="/dashboard/wallet" />
       </div>
 
-      <div className="group relative">
+      <div className="group relative w-full md:mx-auto md:max-w-130 lg:max-w-160 xl:mx-0 xl:max-w-none">
         {/* DARK */}
         <div className="transition-transform duration-200 group-hover:-translate-y-1">
           <WalletCard

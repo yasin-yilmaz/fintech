@@ -99,12 +99,10 @@ export const signup = async (
   body: TSignUpFormValues,
 ): Promise<TSignupSuccess> => {
   const parsedBody = signUpSchema.parse(body);
-  console.log("[signup] body:", parsedBody);
 
   try {
     const res = await apiClient.post<unknown>("/users/register", parsedBody);
     const parsed = signupSuccessSchema.parse(res);
-    console.log("[signup] success:", parsed);
     return parsed;
   } catch (e) {
     return handleApiError(e, signupErrorSchema);
@@ -115,17 +113,12 @@ export const signin = async (
   body: TSignInFormValues,
 ): Promise<TLoginSuccess> => {
   const parsedBody = signInSchema.parse(body);
-  console.log("[signin] body:", parsedBody);
 
   try {
     const res = await apiClient.post<unknown>("/users/login", parsedBody);
     const parsed = loginSuccessSchema.parse(res);
-    console.log("[signin] success:", parsed);
 
     await setAccessTokenCookie(parsed.data.accessToken);
-
-    const after = await getAccessTokenFromCookie();
-    console.log("[signin] cookie after set:", Boolean(after));
 
     return parsed;
   } catch (e) {
@@ -142,7 +135,6 @@ export const logout = async (): Promise<TLogoutSuccess> => {
       success: true,
       message: "Logged out successfully.",
     };
-    console.log("[logout] no token -> fallback:", fallback);
     return fallback;
   }
 
@@ -152,7 +144,6 @@ export const logout = async (): Promise<TLogoutSuccess> => {
     });
 
     const parsed = logoutSuccessSchema.parse(res);
-    console.log("[logout] success:", parsed);
 
     await deleteAccessTokenCookie();
 
@@ -179,7 +170,6 @@ export const getProfile = async (): Promise<TProfileSuccess> => {
     });
 
     const parsed = profileSuccessSchema.parse(res);
-    console.log("[profile] success:", parsed);
     return parsed;
   } catch (e) {
     if (e instanceof ApiError)
@@ -205,7 +195,6 @@ export const refreshAccessToken = async (): Promise<TRefreshSuccess> => {
     );
 
     const parsed = refreshSuccessSchema.parse(res);
-    console.log("[refresh] success:", parsed);
 
     await setAccessTokenCookie(parsed.data.accessToken);
 

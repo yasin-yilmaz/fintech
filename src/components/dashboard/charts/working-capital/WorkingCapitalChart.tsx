@@ -65,7 +65,7 @@ export const WorkingCapitalChart = ({ view, className }: Props) => {
           )}
         >
           <div className={cn("h-60 w-full", isNarrow && "min-w-160")}>
-            <ResponsiveContainer width="100%" height="100%">
+            <ResponsiveContainer width="100%" height={240}>
               <LineChart
                 data={data}
                 margin={{ top: 10, right: 10, left: 0, bottom: 0 }}
