@@ -57,21 +57,21 @@ export const WorkingCapitalChart = ({ view, className }: Props) => {
   return (
     <section
       className={cn(
-        "ring-border-soft rounded-2xl bg-white p-6 ring-1",
+        "ring-border-soft max-w-full min-w-0 rounded-2xl bg-white p-6 ring-1",
         className,
       )}
     >
       <WorkingCapitalHeader />
 
-      <div className="h-60 overflow-visible">
+      <div className="max-w-full min-w-0">
         <div
           className={cn(
-            "h-60 overflow-visible",
-            isNarrow && "overflow-x-auto overflow-y-hidden",
+            "h-60 max-w-full min-w-0",
+            isNarrow ? "overflow-x-auto overflow-y-hidden" : "overflow-hidden",
           )}
         >
-          <div className={cn("h-60", isNarrow && "min-w-160")}>
-            <ResponsiveContainer width="100%" height={"100%"}>
+          <div className={cn("h-60 w-full", isNarrow && "min-w-160")}>
+            <ResponsiveContainer width="100%" height="100%">
               <LineChart
                 data={data}
                 margin={{ top: 10, right: 10, left: 0, bottom: 0 }}
@@ -90,7 +90,7 @@ export const WorkingCapitalChart = ({ view, className }: Props) => {
                       dy="4"
                       stdDeviation="4"
                       floodColor="#686868"
-                      floodOpacity="0.24"
+                      floodOpacity={0.24}
                     />
                   </filter>
                 </defs>
