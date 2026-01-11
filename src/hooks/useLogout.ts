@@ -1,6 +1,6 @@
 "use client";
 
-import * as React from "react";
+import { useCallback, useState } from "react";
 
 import { useRouter } from "next/navigation";
 import { toast } from "sonner";
@@ -16,9 +16,9 @@ type TOptions = {
 
 export const useLogout = (options?: TOptions) => {
   const router = useRouter();
-  const [isLoggingOut, setIsLoggingOut] = React.useState(false);
+  const [isLoggingOut, setIsLoggingOut] = useState(false);
 
-  const doLogout = React.useCallback(async () => {
+  const doLogout = useCallback(async () => {
     if (isLoggingOut) return;
 
     try {

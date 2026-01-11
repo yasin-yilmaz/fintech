@@ -1,6 +1,6 @@
 "use client";
 
-import * as React from "react";
+import { useState } from "react";
 
 import { cn } from "@/lib/utils";
 
@@ -15,9 +15,8 @@ type TProps = {
 };
 
 export const DashboardHeaderActions = ({ className }: TProps) => {
-  const [isSearchMenuOpen, setIsSearchMenuOpen] = React.useState(false);
-  const [isNotificationsMenuOpen, setIsNotificationsMenuOpen] =
-    React.useState(false);
+  const [isSearchMenuOpen, setIsSearchMenuOpen] = useState(false);
+  const [isNotificationsMenuOpen, setIsNotificationsMenuOpen] = useState(false);
 
   const toggleSearch = () => {
     setIsSearchMenuOpen((v) => !v);

@@ -1,6 +1,6 @@
 "use client";
 
-import * as React from "react";
+import { useState } from "react";
 
 import { DashboardUserMenu } from "@/components/dashboard/header/menus/DashboardUserMenu";
 import { UserMenuButton } from "@/components/dashboard/header/UserMenuButton";
@@ -13,7 +13,7 @@ export const DashboardUserArea = () => {
 
   const avatarUrl = "/images/user01.png";
 
-  const [isUserMenuOpen, setIsUserMenuOpen] = React.useState(false);
+  const [isUserMenuOpen, setIsUserMenuOpen] = useState(false);
 
   if (!user) return null;
 

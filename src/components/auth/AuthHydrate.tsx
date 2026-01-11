@@ -1,6 +1,6 @@
 "use client";
 
-import * as React from "react";
+import { useEffect } from "react";
 
 import type { TProfileUser } from "@/schemas/auth.schema";
 import { useAuthStore } from "@/store/auth.store";
@@ -13,7 +13,7 @@ type Props = {
 export const AuthHydrate = ({ user, children }: Props) => {
   const setUser = useAuthStore((s) => s.setUser);
 
-  React.useEffect(() => {
+  useEffect(() => {
     setUser(user);
   }, [setUser, user]);
 

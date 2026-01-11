@@ -1,6 +1,6 @@
-// components/dashboard/wallet/WalletPanel.tsx (Server Component)
 import { getWallet } from "@/lib/api/financial/actions";
 
+import { SectionTitle } from "@/components/ui/SectionTitle";
 import { ViewAllLink } from "@/components/ui/ViewAllLink";
 
 import { toWalletCardView } from "./wallet.mapper";
@@ -22,9 +22,9 @@ export const WalletPanel = async () => {
   if (!primary) return <WalletEmpty />;
 
   return (
-    <section className="rounded-2xl bg-transparent">
+    <section className="bg-transparent">
       <div className="mb-4 flex items-center justify-between">
-        <h2 className="text-granite text-lg font-semibold">Wallet</h2>
+        <SectionTitle>Wallet</SectionTitle>
         <ViewAllLink href="/dashboard/wallet" />
       </div>
 

@@ -1,6 +1,6 @@
 "use client";
 
-import * as React from "react";
+import { useMemo } from "react";
 
 import {
   CartesianGrid,
@@ -18,7 +18,6 @@ import { cn } from "@/lib/utils";
 
 import type { TWorkingCapitalView } from "./workingCapital.types";
 import { WorkingCapitalCursor } from "./WorkingCapitalCursor";
-import { WorkingCapitalHeader } from "./WorkingCapitalHeader";
 import { WorkingCapitalTooltip } from "./WorkingCapitalTooltip";
 
 type Props = {
@@ -45,23 +44,18 @@ const ActiveDot = (props: any) => {
 };
 
 export const WorkingCapitalChart = ({ view, className }: Props) => {
-  const data = React.useMemo(() => view.points ?? [], [view.points]);
+  const data = useMemo(() => view.points ?? [], [view.points]);
   const isNarrow = useMediaQuery("(max-width: 639px)");
 
-  const yMax = React.useMemo(() => {
+  const yMax = useMemo(() => {
     const max = data.reduce((m, p) => Math.max(m, p.income, p.expense), 0);
     const padded = Math.ceil(max * 1.1);
     return padded > 0 ? padded : 10_000;
   }, [data]);
 
   return (
-    <section
-      className={cn(
-        "ring-border-soft max-w-full min-w-0 rounded-2xl bg-white p-6 ring-1",
-        className,
-      )}
-    >
-      <WorkingCapitalHeader />
+    <div className={cn("max-w-full min-w-0", className)}>
+      {/* legend + range */}
 
       <div className="max-w-full min-w-0">
         <div
@@ -172,6 +166,6 @@ export const WorkingCapitalChart = ({ view, className }: Props) => {
           </div>
         </div>
       </div>
-    </section>
+    </div>
   );
 };

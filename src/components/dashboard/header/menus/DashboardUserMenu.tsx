@@ -1,6 +1,6 @@
 "use client";
 
-import * as React from "react";
+import { useEffect, useRef } from "react";
 
 import { CreditCard, LogOut, Settings, User } from "lucide-react";
 import Image from "next/image";
@@ -26,14 +26,14 @@ export const DashboardUserMenu = ({
   avatarUrl,
   className,
 }: TProps) => {
-  const panelRef = React.useRef<HTMLDivElement | null>(null);
+  const panelRef = useRef<HTMLDivElement | null>(null);
 
   const { logout, isLoggingOut } = useLogout({
     onSuccess: onClose,
     redirectTo: "/signin",
   });
 
-  React.useEffect(() => {
+  useEffect(() => {
     if (!isOpen) return;
 
     const onKeyDown = (e: KeyboardEvent) => {

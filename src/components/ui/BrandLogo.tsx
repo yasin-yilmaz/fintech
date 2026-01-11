@@ -1,8 +1,10 @@
 "use client";
 
-import * as React from "react";
+import { useState } from "react";
 
 import Image, { type ImageProps } from "next/image";
+
+import { normalizeSrc } from "@/lib/utils";
 
 type Props = Omit<ImageProps, "src" | "alt"> & {
   src?: string | null;
@@ -16,20 +18,17 @@ export const BrandLogo = ({
   fallbackSrc = "/images/brand/brand-placeholder.png",
   ...props
 }: Props) => {
-  const [currentSrc, setCurrentSrc] = React.useState<string>(
-    src && src.trim().length > 0 ? src : fallbackSrc,
-  );
+  const [hasError, setHasError] = useState(false);
 
-  React.useEffect(() => {
-    setCurrentSrc(src && src.trim().length > 0 ? src : fallbackSrc);
-  }, [src, fallbackSrc]);
+  const resolvedSrc = normalizeSrc(src, fallbackSrc);
 
   return (
     <Image
+      key={resolvedSrc}
       {...props}
-      src={currentSrc}
+      src={hasError ? fallbackSrc : resolvedSrc}
       alt={alt}
-      onError={() => setCurrentSrc(fallbackSrc)}
+      onError={() => setHasError(true)}
     />
   );
 };

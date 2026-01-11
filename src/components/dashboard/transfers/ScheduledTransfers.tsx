@@ -3,6 +3,7 @@ import { CalendarClock } from "lucide-react";
 import { getScheduledTransfers } from "@/lib/api/financial/actions";
 
 import { EmptyState } from "@/components/ui/EmptyState";
+import { SectionTitle } from "@/components/ui/SectionTitle";
 import { ViewAllLink } from "@/components/ui/ViewAllLink";
 
 import { ScheduledTransferItem } from "./ScheduledTransferItem";
@@ -12,7 +13,7 @@ const DASHBOARD_LIMIT = 5;
 
 const ScheduledTransfersHeader = () => (
   <div className="mb-4 flex items-center justify-between">
-    <h2 className="text-granite text-lg font-semibold">Scheduled Transfers</h2>
+    <SectionTitle>Scheduled Transfers</SectionTitle>
     <ViewAllLink href="/dashboard/transfers" />
   </div>
 );
