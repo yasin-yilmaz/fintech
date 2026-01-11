@@ -26,7 +26,8 @@ export const UserMenuButton = ({
       onClick={onClick}
       disabled={disabled}
       className={cn(
-        "text-granite bg-surface hover:bg-surface-hover flex h-12 min-w-53.75 items-center gap-3 rounded-full pr-4.75 pl-2 transition-colors disabled:pointer-events-none disabled:opacity-50",
+        "text-granite bg-surface hover:bg-surface-hover flex h-12 items-center gap-3 rounded-full pr-4.75 pl-2 transition-colors disabled:pointer-events-none disabled:opacity-50",
+        "min-w-0",
         className,
       )}
     >
@@ -42,8 +43,8 @@ export const UserMenuButton = ({
         ) : null}
       </span>
 
-      <span className="text-sm font-semibold">{userName}</span>
-      <ChevronDown className="text-steel ml-auto size-4" />
+      <span className="hidden text-sm font-semibold md:inline">{userName}</span>
+      <ChevronDown className="text-steel ml-auto hidden size-4 md:block" />
     </button>
   );
 };

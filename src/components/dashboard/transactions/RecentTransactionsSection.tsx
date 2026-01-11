@@ -2,8 +2,6 @@
 
 import * as React from "react";
 
-import { Maximize2, Minimize2 } from "lucide-react";
-
 import { getRecentTransactions } from "@/lib/api/financial/actions";
 import { cn } from "@/lib/utils";
 
@@ -44,14 +42,14 @@ export const RecentTransactionsSection = () => {
   const toggle = () => setIsFull((v) => !v);
 
   return (
-    <div className={cn(isFull && "fixed inset-0 z-50")}>
+    <div className={cn("min-w-0", isFull && "fixed inset-0 z-50")}>
       {isFull && (
         <div className="absolute inset-0 bg-black/50" onClick={toggle} />
       )}
 
       <section
         className={cn(
-          "border-border-soft relative rounded-[10px] border bg-transparent py-5",
+          "border-border-soft relative min-w-0 rounded-[10px] border bg-transparent py-5",
           isFull &&
             "bg-surface-2 mx-auto mt-6 h-[calc(100vh-48px)] w-[min(1200px,calc(100vw-24px))] overflow-hidden",
         )}

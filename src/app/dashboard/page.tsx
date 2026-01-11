@@ -11,20 +11,22 @@ import WalletPanelSkeleton from "@/components/dashboard/wallet/WalletPanel.sekel
 
 const DashboardPage = () => {
   return (
-    <section className="grid grid-cols-12 gap-x-9.75 gap-y-8">
+    <section className="grid min-w-0 grid-cols-12 gap-x-4 gap-y-6 md:gap-x-9.75 md:gap-y-8">
       {/* LEFT */}
-      <div className="col-span-12 grid gap-8 xl:col-span-8">
+      <div className="col-span-12 grid min-w-0 gap-8 xl:col-span-8">
         <Suspense fallback={<StatCardsSkeleton />}>
           <StatCards />
         </Suspense>
         <WorkingCapitalSection />
         <RecentTransactionsSection />
       </div>
+
       {/* RIGHT */}
-      <div className="col-span-12 grid content-start gap-8 xl:col-span-4">
+      <div className="col-span-12 grid min-w-0 content-start gap-8 xl:col-span-4">
         <Suspense fallback={<WalletPanelSkeleton />}>
           <WalletPanel />
         </Suspense>
+
         <Suspense fallback={<ScheduledTransfersSkeleton />}>
           <ScheduledTransfers />
         </Suspense>

@@ -17,9 +17,12 @@ const DashboardLayout = async ({ children }: TProps) => {
         <div className="mx-auto grid min-h-dvh grid-cols-1 md:grid-cols-[250px_1fr]">
           <DashboardSidebar activeKey="dashboard" />
 
-          <div className="grid grid-rows-[auto_1fr] pt-7.5">
+          {/* IMPORTANT: min-w-0 -> sağ kolon daralabilsin */}
+          <div className="grid min-w-0 grid-rows-[auto_1fr] pt-5 md:pt-7.5">
             <DashboardHeader title="Dashboard" />
-            <main className="px-10 pb-10.75">{children}</main>
+
+            {/* IMPORTANT: min-w-0 -> main içindeki table sayfayı itmesin */}
+            <main className="min-w-0 px-4 pb-10.75 md:px-10">{children}</main>
           </div>
         </div>
       </div>

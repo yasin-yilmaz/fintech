@@ -7,7 +7,13 @@ type Props = {
 
 export const DashboardHeaderTitle = ({ children, className }: Props) => {
   return (
-    <h1 className={cn("text-granite text-[25px] font-semibold", className)}>
+    <h1
+      className={cn(
+        "text-granite truncate font-semibold",
+        "text-[20px] sm:text-[22px] md:text-[25px]",
+        className,
+      )}
+    >
       {children}
     </h1>
   );

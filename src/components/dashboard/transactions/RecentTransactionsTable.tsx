@@ -38,11 +38,11 @@ export const RecentTransactionsTable = ({ data }: Props) => {
     );
   }
 
-  const isFirstCol = (colId: string) => colId === "name"; // ✅ id: "name" olan column
+  const isFirstCol = (colId: string) => colId === "name";
 
   return (
-    <div className="overflow-x-auto pt-5 pr-8 pl-6.25">
-      <table className="w-full">
+    <div className="w-full max-w-full min-w-0 overflow-x-auto pt-5 pr-8 pl-6.25">
+      <table className="w-max min-w-full border-collapse">
         <thead>
           {table.getHeaderGroups().map((hg) => (
             <tr key={hg.id}>
@@ -71,8 +71,7 @@ export const RecentTransactionsTable = ({ data }: Props) => {
             <tr
               key={row.id}
               className={cn(
-                "transition-colors",
-                "hover:bg-surface-hover/40",
+                "hover:bg-surface-hover/40 transition-colors",
                 idx !== 0 && "border-border-soft border-t",
               )}
             >
@@ -80,7 +79,7 @@ export const RecentTransactionsTable = ({ data }: Props) => {
                 <td
                   key={cell.id}
                   className={cn(
-                    "min-h-10 px-1 py-4 align-middle",
+                    "min-h-10 px-1 py-4 align-middle whitespace-nowrap",
                     isFirstCol(cell.column.id) ? "text-left" : "text-center",
                   )}
                 >

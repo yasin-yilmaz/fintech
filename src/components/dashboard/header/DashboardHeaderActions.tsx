@@ -31,7 +31,7 @@ export const DashboardHeaderActions = ({ className }: TProps) => {
 
   return (
     <div className={cn("relative", className)}>
-      <div className="flex items-center gap-11.25">
+      <div className="flex items-center gap-4 md:gap-11.25">
         <IconButton
           aria-label="Search"
           icon={SearchIcon}
