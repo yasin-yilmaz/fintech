@@ -9,11 +9,11 @@ const LegendDot = ({ className }: { className?: string }) => (
 
 export const WorkingCapitalHeader = () => {
   return (
-    <div className="mb-5 flex flex-col gap-4 md:flex-row md:items-start md:justify-between">
+    <div className="mb-4 flex flex-col gap-3 sm:mb-5 sm:gap-4 md:flex-row md:items-start md:justify-between">
       <SectionTitle>Working Capital</SectionTitle>
 
-      <div className="flex flex-col items-start gap-4 md:flex-row md:items-center md:gap-18">
-        <div className="flex items-center gap-7.5">
+      <div className="flex flex-col items-start gap-3 sm:gap-4 md:flex-row md:items-center md:gap-18">
+        <div className="flex flex-wrap items-center gap-x-5 gap-y-2 sm:flex-nowrap sm:gap-7.5">
           <div className="text-granite-muted flex items-center gap-2 text-xs font-medium">
             <LegendDot className="bg-accent-emerald" />
             Income

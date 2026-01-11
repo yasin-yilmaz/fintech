@@ -24,8 +24,9 @@ export const UserMenuButton = ({
       onClick={onClick}
       disabled={disabled}
       className={cn(
-        "text-granite bg-surface hover:bg-surface-hover flex h-12 items-center gap-3 rounded-full pr-4.75 pl-2 transition-colors disabled:pointer-events-none disabled:opacity-50",
-        "min-w-0",
+        "text-granite bg-surface hover:bg-surface-hover transition-colors disabled:pointer-events-none disabled:opacity-50",
+        "flex size-7 items-center justify-center overflow-hidden rounded-full p-0",
+        "md:h-12 md:w-auto md:justify-start md:gap-3 md:overflow-visible md:rounded-full md:pr-4.75 md:pl-2",
         className,
       )}
     >

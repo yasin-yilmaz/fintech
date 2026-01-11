@@ -48,9 +48,11 @@ export const DashboardNotificationsMenu = ({
       <div
         ref={panelRef}
         className={cn(
-          "absolute top-[calc(100%+12px)] right-0 z-50 w-105",
+          "fixed top-18 left-1/2 z-50 w-[min(420px,calc(100vw-16px))] -translate-x-1/2",
+          "sm:absolute sm:top-[calc(100%+12px)] sm:right-0 sm:left-auto sm:w-105 sm:translate-x-0",
           "bg-surface rounded-xl shadow-sm",
           "ring-granite-soft/60 ring-1",
+          "max-h-[calc(100vh-96px)] overflow-auto sm:max-h-none sm:overflow-visible",
         )}
       >
         <div className="border-granite-soft/60 flex items-center gap-2 border-b px-4 py-3">

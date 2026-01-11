@@ -48,9 +48,9 @@ export const RecentTransactionsSection = () => {
 
       <section
         className={cn(
-          "border-border-soft relative min-w-0 rounded-[10px] border bg-transparent py-5",
+          "border-border-soft relative min-w-0 rounded-[10px] border bg-transparent py-4 sm:py-5",
           isFull &&
-            "bg-surface-2 mx-auto mt-6 h-[calc(100vh-48px)] w-[min(1200px,calc(100vw-24px))] overflow-hidden",
+            "bg-surface-2 mx-auto mt-6 h-[calc(100vh-48px)] w-[min(1200px,calc(100vw-16px))] overflow-hidden sm:w-[min(1200px,calc(100vw-24px))]",
         )}
       >
         <RecentTransactionsHeader isFull={isFull} onToggle={toggle} />

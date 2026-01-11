@@ -13,7 +13,7 @@ import { WorkingCapitalSectionSkeleton } from "./WorkingCapitalSection.skeleton"
 
 export const WorkingCapitalSection = async () => {
   return (
-    <section className="ring-border-soft max-w-full min-w-0 rounded-2xl bg-white p-6 ring-1">
+    <section className="border-border-soft max-w-full min-w-0 rounded-2xl border bg-white p-4 sm:p-6">
       <WorkingCapitalHeader />
 
       <Suspense fallback={<WorkingCapitalSectionSkeleton />}>

@@ -8,7 +8,7 @@ type Props = {
 
 export const RecentTransactionsHeader = ({ isFull, onToggle }: Props) => {
   return (
-    <header className="flex items-center justify-between pr-4.75 pl-6.25">
+    <header className="flex items-center justify-between px-4 sm:pr-4.75 sm:pl-6.25">
       <SectionTitle>Recent Transaction</SectionTitle>
 
       <ViewAllLink

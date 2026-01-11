@@ -50,7 +50,10 @@ export const DashboardSearchMenu = ({ isOpen, onClose, className }: TProps) => {
       <div
         ref={panelRef}
         className={cn(
-          "absolute top-[calc(100%+12px)] right-0 z-50 w-105",
+          // mobile: ekran içine sabitle
+          "fixed top-18 left-1/2 z-50 w-[min(420px,calc(100vw-16px))] -translate-x-1/2",
+          // sm+: butona bağlı dropdown gibi davransın
+          "sm:absolute sm:top-[calc(100%+12px)] sm:right-0 sm:left-auto sm:w-105 sm:translate-x-0",
           "bg-surface rounded-xl shadow-sm",
           "ring-granite-soft/60 ring-1",
         )}
