@@ -6,6 +6,7 @@ import { AuthHydrate } from "@/components/auth/AuthHydrate";
 import { DashboardHeader } from "@/components/dashboard/header/DashboardHeader";
 import { DashboardSidebar } from "@/components/dashboard/sidebar/DashboardSidebar";
 import { DashboardSidebarMobile } from "@/components/dashboard/sidebar/DashboardSidebarMobile";
+import { GoToTopButton } from "@/components/ui/GoToTopButton";
 
 type TProps = { children: ReactNode };
 
@@ -25,6 +26,7 @@ const DashboardLayout = async ({ children }: TProps) => {
             <main className="min-w-0 px-4 pb-10.75 md:px-10">{children}</main>
           </div>
         </div>
+        <GoToTopButton showAfter={120} />
       </div>
     </AuthHydrate>
   );

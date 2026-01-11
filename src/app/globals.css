@@ -72,3 +72,8 @@ body {
     "Apple Color Emoji",
     "Segoe UI Emoji";
 }
+
+button {
+  @apply cursor-pointer;
+  @apply transition-colors;
+}

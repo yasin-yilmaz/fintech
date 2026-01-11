@@ -3,6 +3,7 @@
 import { useEffect } from "react";
 
 import { AnimatePresence, motion } from "motion/react";
+import { usePathname } from "next/navigation";
 
 import { useUIStore } from "@/store/ui.store";
 
@@ -11,8 +12,9 @@ import { DashboardSidebarContent } from "./DashboardSidebar";
 type Props = { activeKey?: string };
 
 export const DashboardSidebarMobile = ({ activeKey = "dashboard" }: Props) => {
-  const isOpen = useUIStore((s) => s.isSidebarOpen);
-  const close = useUIStore((s) => s.closeSidebar);
+  const pathname = usePathname();
+  const isOpen = useUIStore((state) => state.isSidebarOpen);
+  const close = useUIStore((state) => state.closeSidebar);
 
   useEffect(() => {
     if (!isOpen) return;
@@ -29,6 +31,12 @@ export const DashboardSidebarMobile = ({ activeKey = "dashboard" }: Props) => {
       window.removeEventListener("keydown", onKeyDown);
     };
   }, [isOpen, close]);
+
+  useEffect(() => {
+    if (!isOpen) return;
+    close();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [pathname]);
 
   return (
     <AnimatePresence>
