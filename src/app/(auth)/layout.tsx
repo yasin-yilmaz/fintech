@@ -2,8 +2,6 @@ import { PropsWithChildren } from "react";
 
 import Image from "next/image";
 
-import { currentYear } from "@/lib/helpers/date";
-
 import { Logo } from "@/components/brand/Logo";
 
 type Props = PropsWithChildren;
@@ -14,20 +12,15 @@ export default function AuthLayout({ children }: Props) {
       <div className="mx-auto grid min-h-screen grid-cols-1 lg:grid-cols-2">
         {/* Left side */}
         <div className="flex flex-col px-6 py-10 lg:px-14">
-          <div className="mx-auto flex w-full max-w-md flex-1 flex-col">
+          <div className="mx-auto flex w-full max-w-md flex-1 flex-col gap-8 lg:gap-0">
             {/* LOGO */}
             <div className="flex items-center">
-              <Logo className="h-7.5 w-27 bg-[#1B212D]" />
+              <Logo className="bg-granite h-7.5 w-27" />
             </div>
 
             {/* CONTENT */}
             <div className="flex flex-1 items-center">
               <div className="w-full">{children}</div>
-            </div>
-
-            {/* FOOTER */}
-            <div className="mt-8 text-xs text-zinc-400">
-              © {currentYear} Fintech. All rights reserved.
             </div>
           </div>
         </div>

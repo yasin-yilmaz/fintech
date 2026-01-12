@@ -14,7 +14,7 @@ const DASHBOARD_LIMIT = 5;
 const ScheduledTransfersHeader = () => (
   <div className="mb-4 flex items-center justify-between">
     <SectionTitle>Scheduled Transfers</SectionTitle>
-    <ViewAllLink href="/dashboard/transfers" />
+    <ViewAllLink href="/dashboard/transactions" />
   </div>
 );
 

@@ -25,7 +25,7 @@ export const WalletPanel = async () => {
     <section className="bg-transparent">
       <div className="mb-4 flex items-center justify-between">
         <SectionTitle>Wallet</SectionTitle>
-        <ViewAllLink href="/dashboard/wallet" />
+        <ViewAllLink href="/dashboard/wallets" />
       </div>
 
       <div className="group relative w-full md:mx-auto md:max-w-130 lg:max-w-160 xl:mx-0 xl:max-w-none">
