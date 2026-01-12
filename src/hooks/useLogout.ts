@@ -6,7 +6,6 @@ import { useRouter } from "next/navigation";
 import { toast } from "sonner";
 
 import { logout } from "@/lib/api/auth/actions";
-import { AuthApiError } from "@/lib/api/auth/errors";
 
 type TOptions = {
   redirectTo?: string;
@@ -21,11 +20,18 @@ export const useLogout = (options?: TOptions) => {
   const doLogout = useCallback(async () => {
     if (isLoggingOut) return;
 
+    setIsLoggingOut(true);
     try {
-      setIsLoggingOut(true);
-
       const res = await logout();
-      console.log("[logout] success:", res);
+
+      if (!res.ok) {
+        toast.error(res.message || "Logout failed.");
+        router.push(options?.redirectTo ?? "/signin");
+        router.refresh();
+        return;
+      }
+
+      console.log("[logout] success:", res.data);
 
       toast.success(
         options?.successMessage ?? res.message ?? "Logged out successfully.",
@@ -35,18 +41,6 @@ export const useLogout = (options?: TOptions) => {
 
       router.push(options?.redirectTo ?? "/signin");
       router.refresh();
-    } catch (err) {
-      if (err instanceof AuthApiError) {
-        console.log("[logout] error:", {
-          message: err.message,
-          code: err.code,
-        });
-        toast.error(err.message);
-        return;
-      }
-
-      console.log("[logout] unknown error:", err);
-      toast.error("Something went wrong.");
     } finally {
       setIsLoggingOut(false);
     }

@@ -7,7 +7,6 @@ import { toast } from "sonner";
 import { zodResolver } from "@hookform/resolvers/zod";
 
 import { signin } from "@/lib/api/auth/actions";
-import { AuthApiError } from "@/lib/api/auth/errors";
 
 import { SubmitButton } from "@/components/ui/SubmitButton";
 
@@ -35,45 +34,27 @@ const SignInForm = () => {
   });
 
   const onSubmit = async (values: TSignInFormValues) => {
-    try {
-      const res = await signin(values);
+    const res = await signin(values);
 
-      console.log("[signin] success:", res);
-      console.log("[signin] accessToken:", res.data.accessToken);
+    if (!res.ok) {
+      if (res.code === "VALIDATION_FAILED" && res.details?.length) {
+        res.details.forEach((d) => {
+          const field = d.field as keyof TSignInFormValues | undefined;
+          const message = d.message ?? "Invalid value.";
 
-      toast.success(res.message ?? "Signed in successfully.");
-      router.push("/dashboard");
-    } catch (err) {
-      if (err instanceof AuthApiError) {
-        console.log("[authApi.login] error:", {
-          message: err.message,
-          code: err.code,
-          details: err.details,
+          if (field && (field === "email" || field === "password")) {
+            setError(field, { type: "server", message });
+          }
         });
-
-        if (err.code === "VALIDATION_FAILED" && err.details?.length) {
-          err.details.forEach((d) => {
-            const field = d.field as keyof TSignInFormValues | undefined;
-            const message = d.message ?? "Invalid value.";
-
-            if (field && ["email", "password"].includes(field)) {
-              setError(field, { type: "server", message });
-            }
-          });
-        }
-
-        toast.error(err.message);
-        return;
       }
 
-      console.log("[authApi.login] unknown error:", err);
-
-      const message =
-        err instanceof Error ? err.message : "Something went wrong.";
-      toast.error(message);
+      toast.error(res.message);
+      return;
     }
-  };
 
+    toast.success(res.message ?? "Signed in successfully.");
+    router.push("/dashboard");
+  };
   return (
     <form onSubmit={handleSubmit(onSubmit)} className="space-y-6.25">
       <fieldset

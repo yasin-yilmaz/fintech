@@ -28,7 +28,15 @@ import {
   type TSignupSuccess,
 } from "@/schemas/auth.schema";
 
-import { AuthApiError } from "./errors";
+export type TAuthFieldError = {
+  field: string;
+  message: string;
+  code?: string;
+};
+
+export type TAuthResult<T> =
+  | { ok: true; data: T; message?: string }
+  | { ok: false; message: string; code?: string; details?: TAuthFieldError[] };
 
 const ACCESS_TOKEN_COOKIE = "ACCESS_TOKEN";
 
@@ -61,66 +69,86 @@ type TErrorPayloadBase = {
   details?: unknown;
 };
 
-const throwAuthApiErrorFrom = <TSchema extends z.ZodType<TErrorPayloadBase>>(
-  err: ApiError,
-  schema: TSchema,
-): never => {
-  const parsed = schema.safeParse(err.payload);
-
-  if (parsed.success) {
-    throw new AuthApiError(parsed.data.message ?? err.message, {
-      code: parsed.data.code,
-      details: parsed.data.details as {
-        field: string;
-        message: string;
-        code?: string | undefined;
-      }[],
-    });
-  }
-
-  throw new AuthApiError(err.message);
-};
-
-const handleApiError = <TSchema extends z.ZodType<TErrorPayloadBase>>(
+const toAuthErrorResult = <TSchema extends z.ZodType<TErrorPayloadBase>>(
   error: unknown,
   schema: TSchema,
-): never => {
-  if (error instanceof ApiError) return throwAuthApiErrorFrom(error, schema);
-  throw new AuthApiError("Something went wrong.");
+  fallbackMessage = "Something went wrong.",
+): TAuthResult<never> => {
+  if (error instanceof ApiError) {
+    const parsed = schema.safeParse(error.payload);
+
+    if (parsed.success) {
+      return {
+        ok: false,
+        message: parsed.data.message ?? error.message,
+        code: parsed.data.code,
+        details:
+          (parsed.data.details as TAuthFieldError[] | undefined) ?? undefined,
+      };
+    }
+
+    return { ok: false, message: error.message };
+  }
+
+  if (error instanceof Error) {
+    return { ok: false, message: error.message || fallbackMessage };
+  }
+
+  return { ok: false, message: fallbackMessage };
 };
 
 export const signup = async (
   body: TSignUpFormValues,
-): Promise<TSignupSuccess> => {
-  const parsedBody = signUpSchema.parse(body);
+): Promise<TAuthResult<TSignupSuccess>> => {
+  const parsedBody = signUpSchema.safeParse(body);
+
+  if (!parsedBody.success) {
+    return {
+      ok: false,
+      message: "Please check your form inputs.",
+      code: "VALIDATION_FAILED",
+    };
+  }
 
   try {
-    const res = await apiClient.post<unknown>("/users/register", parsedBody);
+    const res = await apiClient.post<unknown>(
+      "/users/register",
+      parsedBody.data,
+    );
     const parsed = signupSuccessSchema.parse(res);
-    return parsed;
+
+    return { ok: true, data: parsed, message: parsed.message };
   } catch (e) {
-    return handleApiError(e, signupErrorSchema);
+    return toAuthErrorResult(e, signupErrorSchema);
   }
 };
 
 export const signin = async (
   body: TSignInFormValues,
-): Promise<TLoginSuccess> => {
-  const parsedBody = signInSchema.parse(body);
+): Promise<TAuthResult<TLoginSuccess>> => {
+  const parsedBody = signInSchema.safeParse(body);
+
+  if (!parsedBody.success) {
+    return {
+      ok: false,
+      message: "Please check your form inputs.",
+      code: "VALIDATION_FAILED",
+    };
+  }
 
   try {
-    const res = await apiClient.post<unknown>("/users/login", parsedBody);
+    const res = await apiClient.post<unknown>("/users/login", parsedBody.data);
     const parsed = loginSuccessSchema.parse(res);
 
     await setAccessTokenCookie(parsed.data.accessToken);
 
-    return parsed;
+    return { ok: true, data: parsed, message: parsed.message };
   } catch (e) {
-    return handleApiError(e, loginErrorSchema);
+    return toAuthErrorResult(e, loginErrorSchema);
   }
 };
 
-export const logout = async (): Promise<TLogoutSuccess> => {
+export const logout = async (): Promise<TAuthResult<TLogoutSuccess>> => {
   const token = await getAccessTokenFromCookie();
 
   if (!token) {
@@ -129,7 +157,7 @@ export const logout = async (): Promise<TLogoutSuccess> => {
       success: true,
       message: "Logged out successfully.",
     };
-    return fallback;
+    return { ok: true, data: fallback, message: fallback.message };
   }
 
   try {
@@ -141,21 +169,21 @@ export const logout = async (): Promise<TLogoutSuccess> => {
 
     await deleteAccessTokenCookie();
 
-    return parsed;
+    return { ok: true, data: parsed, message: parsed.message };
   } catch (e) {
-    if (e instanceof ApiError)
-      return throwAuthApiErrorFrom(e, logoutErrorSchema);
-    throw new AuthApiError("Something went wrong.");
+    return toAuthErrorResult(e, logoutErrorSchema);
   }
 };
 
-export const getProfile = async (): Promise<TProfileSuccess> => {
+export const getProfile = async (): Promise<TAuthResult<TProfileSuccess>> => {
   const token = await getAccessTokenFromCookie();
 
   if (!token) {
-    throw new AuthApiError("An access token is required for authentication.", {
+    return {
+      ok: false,
+      message: "An access token is required for authentication.",
       code: "TOKEN_MISSING",
-    });
+    };
   }
 
   try {
@@ -164,21 +192,23 @@ export const getProfile = async (): Promise<TProfileSuccess> => {
     });
 
     const parsed = profileSuccessSchema.parse(res);
-    return parsed;
+    return { ok: true, data: parsed };
   } catch (e) {
-    if (e instanceof ApiError)
-      return throwAuthApiErrorFrom(e, profileErrorSchema);
-    throw new AuthApiError("Something went wrong.");
+    return toAuthErrorResult(e, profileErrorSchema);
   }
 };
 
-export const refreshAccessToken = async (): Promise<TRefreshSuccess> => {
+export const refreshAccessToken = async (): Promise<
+  TAuthResult<TRefreshSuccess>
+> => {
   const token = await getAccessTokenFromCookie();
 
   if (!token) {
-    throw new AuthApiError("An access token is required for authentication.", {
+    return {
+      ok: false,
+      message: "An access token is required for authentication.",
       code: "TOKEN_MISSING",
-    });
+    };
   }
 
   try {
@@ -192,10 +222,8 @@ export const refreshAccessToken = async (): Promise<TRefreshSuccess> => {
 
     await setAccessTokenCookie(parsed.data.accessToken);
 
-    return parsed;
+    return { ok: true, data: parsed, message: parsed.message };
   } catch (e) {
-    if (e instanceof ApiError)
-      return throwAuthApiErrorFrom(e, refreshErrorSchema);
-    throw new AuthApiError("Token refresh failed.");
+    return toAuthErrorResult(e, refreshErrorSchema, "Token refresh failed.");
   }
 };

@@ -7,7 +7,6 @@ import { toast } from "sonner";
 import { zodResolver } from "@hookform/resolvers/zod";
 
 import { signup } from "@/lib/api/auth/actions";
-import { AuthApiError } from "@/lib/api/auth/errors";
 
 import { FormField } from "@/components/form/FormField";
 import { SubmitButton } from "@/components/ui/SubmitButton";
@@ -35,42 +34,39 @@ const SignUpForm = () => {
   });
 
   const onSubmit = async (values: TSignUpFormValues) => {
-    try {
-      const res = await signup(values);
+    const res = await signup(values);
 
-      console.log("[authApi.signup] success:", res);
+    if (!res.ok) {
+      if (res.code === "VALIDATION_FAILED" && res.details?.length) {
+        res.details.forEach((d) => {
+          const field = d.field as keyof TSignUpFormValues | undefined;
+          const message = d.message ?? "Invalid value.";
 
-      toast.success(res.message ?? "Account created successfully.");
-      router.push("/signin");
-    } catch (err) {
-      if (err instanceof AuthApiError) {
-        console.log("[authApi.signup] error:", {
-          message: err.message,
-          code: err.code,
-          details: err.details,
+          if (field && ["fullName", "email", "password"].includes(field)) {
+            setError(field, { type: "server", message });
+          }
         });
 
-        if (err.code === "VALIDATION_FAILED" && err.details?.length) {
-          err.details.forEach((d) => {
-            const field = d.field as keyof TSignUpFormValues | undefined;
-            const message = d.message ?? "Invalid value.";
-
-            if (field && ["fullName", "email", "password"].includes(field)) {
-              setError(field, { type: "server", message });
-            }
-          });
-        }
-
-        toast.error(err.message);
+        toast.error(res.message);
         return;
       }
 
-      console.log("[authApi.signup] unknown error:", err);
+      if (res.code === "USER_ALREADY_EXISTS") {
+        setError("email", {
+          type: "server",
+          message: res.message || "This email is already taken.",
+        });
 
-      const message =
-        err instanceof Error ? err.message : "Something went wrong.";
-      toast.error(message);
+        toast.error(res.message || "This email is already taken.");
+        return;
+      }
+
+      toast.error(res.message);
+      return;
     }
+
+    toast.success(res.message ?? "Account created successfully.");
+    router.push("/signin");
   };
 
   return (

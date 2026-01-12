@@ -1,5 +1,7 @@
 import type { ReactNode } from "react";
 
+import { redirect } from "next/navigation";
+
 import { getProfile } from "@/lib/api/auth/actions";
 
 import { AuthHydrate } from "@/components/auth/AuthHydrate";
@@ -12,10 +14,14 @@ import { GoToTopButton } from "@/components/ui/GoToTopButton";
 type TProps = { children: ReactNode };
 
 const DashboardLayout = async ({ children }: TProps) => {
-  const profile = await getProfile();
+  const profileRes = await getProfile();
+
+  if (!profileRes.ok) {
+    redirect("/signin");
+  }
 
   return (
-    <AuthHydrate user={profile.data}>
+    <AuthHydrate user={profileRes.data.data}>
       <div className="min-h-dvh bg-white">
         <div className="mx-auto grid min-h-dvh grid-cols-1 md:grid-cols-[250px_1fr]">
           <DashboardSidebar />
