@@ -1,36 +1,169 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# Fintech Dashboard – Case Study
 
-## Getting Started
+**Repository:** https://github.com/yasin-yilmaz/fintech
 
-First, run the development server:
+This project is a **frontend-focused case study** built with **Next.js** to demonstrate modern dashboard architecture, performance-conscious design, and scalable UI patterns for fintech-style applications.
+
+> ⚠️ **Important:**  
+> This is **not a production-ready product**.  
+> It is a **demo / case study application** created to showcase architecture, code quality, and UI/UX decisions.
+
+---
+
+## ✨ Overview
+
+Fintech is a demo dashboard application that simulates a modern financial platform experience, including:
+
+- Authentication flows (Sign In / Sign Up)
+- Dashboard layout with charts and statistics
+- Wallet and transaction views
+- Responsive and mobile-first design
+- Accessible modals and UI primitives
+- Clean separation of server and client components
+
+The project focuses on:
+
+- **Performance**
+- **Maintainability**
+- **Scalable component design**
+- **Real-world frontend patterns**
+
+---
+
+## 🚀 Getting Started
+
+### Clone the repository
+
+```bash
+git clone git@github.com:yasin-yilmaz/fintech.git
+cd fintech
+```
+
+### Install dependencies
+
+```bash
+npm install
+```
+
+### Run the development server
 
 ```bash
 npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+The app will be available at: `http://localhost:3000`
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+### Build the production app
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+```bash
+npm run build
+```
 
-## Learn More
+### Start the production server
 
-To learn more about Next.js, take a look at the following resources:
+```bash
+npm run start
+```
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+---
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+## 🔐 Environment Variables
 
-## Deploy on Vercel
+This project requires environment configuration.
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+You **must create the following files** based on `.env.sample`:
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+- `.env.local`
+- `.env.development`
+- `.env.production`
+
+### Example `.env.sample`
+
+```env
+NEXT_PUBLIC_API_BASE_URL="https://api.example.com"
+```
+
+> `NEXT_PUBLIC_API_BASE_URL`
+> Base URL of the backend API used by the demo application.
+
+---
+
+## 🧱 Tech Stack
+
+Core technologies and tools used in this case study:
+
+- **Next.js 16 (App Router)**
+- **React 19**
+- **TypeScript**
+- **Tailwind CSS**
+- **Zustand** – global UI state
+- **React Hook Form** – form managment
+- **Zod** – schema validation
+- **Framer Motion** – animations
+- **Recharts** – data visualization
+- **date-fns** – date utilities
+- **ESLint + TypeScript strict mode**
+- **Server & Client Components separation**
+
+---
+
+## 🧠 Architecture Notes
+
+- **Server Components** are used for data fetching where possible
+- **Client Components** handle interactivity and UI state
+- Global UI concerns (sidebar, modals) are managed via **Zustand**
+- Reusable primitives (Modal, ConfirmModal, Portal, Buttons) are isolated
+- Layout-level concerns are handled in `layout.tsx` and `template.tsx`
+- Metadata is centralized via `appMetadata` and `pageMetadata`
+
+---
+
+## 🎨 UI & UX Principles
+
+- Mobile-first responsive layout
+- Keyboard and screen-reader friendly modals
+- Minimal but expressive motion
+- Predictable spacing and typography scale
+- Clear visual hierarchy for dashboards
+
+---
+
+## 📦 Scripts
+
+```bash
+npm run dev       # Development server
+npm run build     # Production build
+npm run start     # Start production server
+npm run lint      # Lint check
+npm run lint:strict # Lint + TypeScript check
+```
+
+---
+
+## 🧪 Status
+
+- ✅ UI complete
+- ✅ Architecture stabilized
+- ⚠️ Mock / demo data only
+
+---
+
+## 👤 Author
+
+**Yasin Yılmaz**
+Senior Frontend Developer
+
+- GitHub: [https://github.com/yasin-yilmaz](https://github.com/yasin-yilmaz)
+
+---
+
+## 🔗 Links
+
+- Repository: [https://github.com/yasin-yilmaz/fintech](https://github.com/yasin-yilmaz/fintech)
+- GitHub Profile: [https://github.com/yasin-yilmaz](https://github.com/yasin-yilmaz)
+
+---
+
+## 📄 License
+
+This project is shared for **educational and portfolio purposes** only.
