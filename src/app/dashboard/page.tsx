@@ -1,13 +1,34 @@
 import { Suspense } from "react";
 
+import { Metadata } from "next";
+
+import { pageMetadata } from "@/lib/metadata";
+
 import { WorkingCapitalSection } from "@/components/dashboard/charts/working-capital/WorkingCapitalSection";
+import { WorkingCapitalSectionSkeleton } from "@/components/dashboard/charts/working-capital/WorkingCapitalSection.skeleton";
 import { StatCards } from "@/components/dashboard/stats/StatCards";
 import { StatCardsSkeleton } from "@/components/dashboard/stats/StatCardsSkeleton";
+import RecentTransactionsSkeleton from "@/components/dashboard/transactions/RecentTransactions.skeleton";
 import { RecentTransactionsSection } from "@/components/dashboard/transactions/RecentTransactionsSection";
 import { ScheduledTransfers } from "@/components/dashboard/transfers/ScheduledTransfers";
 import ScheduledTransfersSkeleton from "@/components/dashboard/transfers/ScheduledTransfersSkeleton";
 import { WalletPanel } from "@/components/dashboard/wallet/WalletPanel";
 import WalletPanelSkeleton from "@/components/dashboard/wallet/WalletPanel.sekeleton";
+
+export const metadata: Metadata = pageMetadata({
+  title: "Dashboard",
+  description:
+    "Manage your finances, cards, transfers and recent activity in one place.",
+  canonical: "/dashboard",
+  robots: { index: false, follow: false },
+  openGraph: {
+    url: "/dashboard",
+    title: "Dashboard",
+  },
+  twitter: {
+    title: "Dashboard",
+  },
+});
 
 const DashboardPage = () => {
   return (
@@ -17,8 +38,13 @@ const DashboardPage = () => {
         <Suspense fallback={<StatCardsSkeleton />}>
           <StatCards />
         </Suspense>
-        <WorkingCapitalSection />
-        <RecentTransactionsSection />
+        <Suspense fallback={<WorkingCapitalSectionSkeleton />}>
+          <WorkingCapitalSection />
+        </Suspense>
+
+        <Suspense fallback={<RecentTransactionsSkeleton rows={3} />}>
+          <RecentTransactionsSection />
+        </Suspense>
       </div>
 
       {/* RIGHT */}

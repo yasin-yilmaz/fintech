@@ -1,5 +1,13 @@
+import { pageMetadata } from "@/lib/metadata";
+
 import AuthHeader from "@/components/auth/AuthHeader";
 import SignUpForm from "@/components/auth/SignUpForm";
+
+export const metadata = pageMetadata({
+  title: "Create new account",
+  description: "Create your Fintech account to start managing your finances.",
+  canonical: "/signup",
+});
 
 export default function SignUpPage() {
   return (
