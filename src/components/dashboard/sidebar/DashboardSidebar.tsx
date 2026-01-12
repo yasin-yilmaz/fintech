@@ -13,6 +13,7 @@ import { SidebarNav, type TSidebarNavItem } from "./SidebarNav";
 
 const ACTION_ITEMS = [
   {
+    key: "help",
     type: "link" as const,
     href: "/dashboard/help",
     label: "Help",

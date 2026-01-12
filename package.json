@@ -6,7 +6,9 @@
     "dev": "next dev",
     "build": "next build",
     "start": "next start",
-    "lint": "eslint"
+    "lint": "eslint",
+    "lint:strict": "eslint \"src/**/*.{js,jsx,ts,tsx}\" --max-warnings 0 && tsc --noEmit",
+    "check": "eslint src --ext js,jsx,ts,tsx --quiet && tsc --noEmit"
   },
   "dependencies": {
     "@faker-js/faker": "^10.2.0",

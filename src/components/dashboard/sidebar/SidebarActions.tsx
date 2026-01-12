@@ -15,6 +15,7 @@ import { SidebarActionItem } from "./SidebarActionItem";
 import { SidebarNavItem } from "./SidebarNavItem";
 
 type TLinkAction = {
+  key: string;
   type: "link";
   href: string;
   label: string;
@@ -46,7 +47,7 @@ export const SidebarActions = ({ items }: TProps) => {
             href={item.href}
             label={item.label}
             icon={item.icon}
-            isActive={item.href === pathname}
+            isActive={item.key === activeKey}
           />
         ))}
 
