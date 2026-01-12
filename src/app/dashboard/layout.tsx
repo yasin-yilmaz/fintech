@@ -4,6 +4,7 @@ import { getProfile } from "@/lib/api/auth/actions";
 
 import { AuthHydrate } from "@/components/auth/AuthHydrate";
 import { DashboardHeader } from "@/components/dashboard/header/DashboardHeader";
+import { DashboardHeaderClientWrapper } from "@/components/dashboard/header/DashboardHeaderClientWrapper";
 import { DashboardSidebar } from "@/components/dashboard/sidebar/DashboardSidebar";
 import { DashboardSidebarMobile } from "@/components/dashboard/sidebar/DashboardSidebarMobile";
 import { GoToTopButton } from "@/components/ui/GoToTopButton";
@@ -21,8 +22,9 @@ const DashboardLayout = async ({ children }: TProps) => {
           <DashboardSidebarMobile />
 
           <div className="grid min-w-0 grid-rows-[auto_1fr]">
-            <DashboardHeader title="Dashboard" />
-
+            <DashboardHeaderClientWrapper>
+              <DashboardHeader title="Dashboard" />
+            </DashboardHeaderClientWrapper>
             <main className="min-w-0 px-4 pb-10.75 md:px-10">{children}</main>
           </div>
         </div>
