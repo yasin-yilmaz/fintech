@@ -78,7 +78,7 @@ export const RangeSelect = ({
       <button
         type="button"
         onClick={() => setIsOpen((v) => !v)}
-        className="bg-surface-2 hover:bg-surface-hover text-granite flex min-w-[150px] items-center justify-between gap-2 rounded-[5px] py-2 pr-2 pl-2.5 text-xs font-semibold transition-colors"
+        className="bg-surface-2 hover:bg-surface-hover text-granite flex min-w-37.5 items-center justify-between gap-2 rounded-[5px] py-2 pr-2 pl-2.5 text-xs font-semibold transition-colors"
         aria-haspopup="menu"
         aria-expanded={isOpen}
       >
