@@ -29,7 +29,7 @@ export const WalletPanel = async () => {
       </div>
 
       <div className="group relative w-full md:mx-auto md:max-w-130 lg:max-w-160 xl:mx-0 xl:max-w-none">
-        {/* DARK */}
+        {/* dark */}
         <div className="transition-transform duration-200 group-hover:-translate-y-1">
           <WalletCard
             company={primary.company}
@@ -41,7 +41,7 @@ export const WalletPanel = async () => {
           />
         </div>
 
-        {/* WHITE */}
+        {/* transparent */}
         {secondary ? (
           <div className="absolute top-40 left-1/2 w-[92%] -translate-x-1/2 transition-transform duration-200 group-hover:-translate-y-2">
             <div className="border-border-soft rounded-[15px] border bg-white/55 backdrop-blur-sm transition-all duration-200 group-hover:bg-white/70 group-hover:shadow-sm group-hover:backdrop-blur-none">

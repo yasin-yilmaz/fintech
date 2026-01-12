@@ -32,8 +32,6 @@ import { AuthApiError } from "./errors";
 
 const ACCESS_TOKEN_COOKIE = "ACCESS_TOKEN";
 
-/** ----- cookie helpers (✅ async) ----- */
-
 const setAccessTokenCookie = async (token: string) => {
   const cookieStore = await cookies();
 
@@ -56,8 +54,6 @@ const deleteAccessTokenCookie = async () => {
   const cookieStore = await cookies();
   cookieStore.delete(ACCESS_TOKEN_COOKIE);
 };
-
-/** ----- error helper (no any) ----- */
 
 type TErrorPayloadBase = {
   message?: string;
@@ -92,8 +88,6 @@ const handleApiError = <TSchema extends z.ZodType<TErrorPayloadBase>>(
   if (error instanceof ApiError) return throwAuthApiErrorFrom(error, schema);
   throw new AuthApiError("Something went wrong.");
 };
-
-/** ----- actions ----- */
 
 export const signup = async (
   body: TSignUpFormValues,

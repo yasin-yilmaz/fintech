@@ -3,7 +3,6 @@ import { cn } from "@/lib/utils";
 type Props = Omit<React.SVGProps<SVGSVGElement>, "color"> & {
   size?: number;
   title?: string;
-  /** Default: "#C8EE44" (orijinal SVG rengi) */
   fillColor?: string;
 };
 

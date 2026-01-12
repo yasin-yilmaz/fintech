@@ -49,7 +49,7 @@ export const WalletCard = ({
         )}
       />
 
-      {/* Header */}
+      {/* header */}
       <div className="relative flex items-center gap-3">
         <p className="text-base">{company}</p>
         <span
@@ -68,7 +68,7 @@ export const WalletCard = ({
         </p>
       </div>
 
-      {/* Chip and wifi */}
+      {/* chip and wifi */}
       <div className="relative mt-6 flex items-center justify-between">
         <ChipCardIcon
           className="text-stone"
@@ -78,7 +78,7 @@ export const WalletCard = ({
         <ContactlessIcon className="text-granite-mid" />
       </div>
 
-      {/* Numbers */}
+      {/* numbers */}
       <div className="mt-6 space-y-3">
         <p className="relative text-[17px] font-bold tracking-[0.18em]">
           {maskedNumber}
@@ -93,7 +93,7 @@ export const WalletCard = ({
         </p>
       </div>
 
-      {/* Footer */}
+      {/* brand */}
       <div className="relative mt-0.75 flex items-end justify-end">
         {brand === "visa" ? <VisaLogo /> : <MastercardLogo />}
       </div>

@@ -26,9 +26,10 @@
   --color-granite-soft: #d1d5db;
   --color-granite-charcoal: #3d3d3c;
 
+  /* Stone */
   --color-stone: #b2aea9;
 
-  /* STEEL */
+  /* steel */
   --color-steel: #929eae;
 
   /* Accent */
@@ -43,7 +44,7 @@
   --color-surface-cool: #f3f6f8;
   --color-surface-hover: #f3f5f7;
 
-  /* BORDER */
+  /* border */
 
   --color-border-soft: #f5f5f5;
 }

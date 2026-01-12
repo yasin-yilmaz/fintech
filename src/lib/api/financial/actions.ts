@@ -23,13 +23,11 @@ import {
 
 const ACCESS_TOKEN_COOKIE = "ACCESS_TOKEN";
 
-/** ----- cookie helper ----- */
 const getAccessTokenFromCookie = async () => {
   const cookieStore = await cookies();
   return cookieStore.get(ACCESS_TOKEN_COOKIE)?.value;
 };
 
-/** ----- shared error helper (same pattern) ----- */
 type TErrorPayloadBase = {
   message?: string;
   code?: string;
@@ -65,7 +63,6 @@ const handleApiError = <TSchema extends z.ZodType<TErrorPayloadBase>>(
   throw new AuthApiError("Something went wrong.");
 };
 
-/** ----- tiny auth guard ----- */
 const requireToken = async () => {
   const token = await getAccessTokenFromCookie();
   if (!token) {
@@ -75,8 +72,6 @@ const requireToken = async () => {
   }
   return token;
 };
-
-/** ----- actions ----- */
 
 export const getFinancialSummary =
   async (): Promise<TFinancialSummarySuccess> => {

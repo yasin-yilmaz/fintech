@@ -1,5 +1,5 @@
 export type TWorkingCapitalPoint = {
-  month: string; // "Ağustos"
+  month: string;
   income: number;
   expense: number;
   net: number;

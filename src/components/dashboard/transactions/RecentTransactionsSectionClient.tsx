@@ -31,11 +31,9 @@ export const RecentTransactionsSectionClient = ({
   const [rows, setRows] = useState<TRecentTransactionRow[]>(initialRows);
   const [hasError, setHasError] = useState(initialError);
 
-  // ✅ render tetiklemeden "ilk kez mi?" bilgisini tut
   const didMountRef = useRef(false);
 
   useEffect(() => {
-    // ✅ ilk render'da server'dan gelen initialRows yeterli
     if (!didMountRef.current) {
       didMountRef.current = true;
       return;
@@ -60,7 +58,6 @@ export const RecentTransactionsSectionClient = ({
 
   return (
     <>
-      {/* normal (compact) görünüm */}
       {!isFull ? (
         <section className="border-border-soft relative min-w-0 rounded-[10px] border bg-transparent py-4 sm:py-5">
           <RecentTransactionsHeader isFull={isFull} onToggle={toggle} />
@@ -72,7 +69,7 @@ export const RecentTransactionsSectionClient = ({
         </section>
       ) : null}
 
-      {/* fullscreen overlay */}
+      {/* overlay */}
       {isFull ? (
         <Portal>
           <div className="fixed inset-0 z-50">

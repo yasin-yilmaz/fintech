@@ -11,13 +11,13 @@ type PageMetadataInput = {
 };
 
 export const appMetadata: Metadata = {
-  metadataBase: new URL("https://fintech.com"),
+  metadataBase: new URL("https://fintech-case-demo.netlify.app"),
   title: {
     default: "Fintech",
     template: "%s | Fintech",
   },
   description:
-    "Fintech ile finans yönetimini kolaylaştırın. Güvenli giriş, hızlı kayıt ve kişisel dashboard ile işlemlerinizi tek yerden yönetin.",
+    "Fintech is a demo application built to showcase a modern financial dashboard experience.",
   applicationName: "Fintech",
   keywords: [
     "fintech",
@@ -33,18 +33,18 @@ export const appMetadata: Metadata = {
   alternates: { canonical: "/" },
   openGraph: {
     type: "website",
-    url: "https://fintech.com",
+    url: "https://fintech-case-demo.netlify.app",
     siteName: "Fintech",
     title: "Fintech",
     description:
-      "Güvenli ve modern bir finans deneyimi: Sign in / Sign up ve kişisel dashboard.",
+      "Fintech is a demo application built to showcase a modern financial dashboard experience.",
     images: [{ url: "/og.png", width: 1200, height: 630, alt: "Fintech" }],
   },
   twitter: {
     card: "summary_large_image",
     title: "Fintech",
     description:
-      "Güvenli ve modern bir finans deneyimi: Sign in / Sign up ve kişisel dashboard.",
+      "Fintech is a demo application built to showcase a modern financial dashboard experience.",
     images: ["/og.png"],
   },
   icons: {
@@ -55,8 +55,7 @@ export const appMetadata: Metadata = {
 };
 
 const getBaseTitleConfig = (base: Metadata["title"]) => {
-  // Metadata["title"] -> string | TemplateString | null | undefined
-  if (base && typeof base === "object") return base; // TemplateString
+  if (base && typeof base === "object") return base;
   return { default: "Fintech", template: "%s | Fintech" };
 };
 
@@ -76,7 +75,6 @@ export const pageMetadata = ({
 
   const finalDescription = description ?? baseDescription;
 
-  // appMetadata.openGraph / twitter union tipler yüzünden güvenli string çekiyoruz
   const baseOg = appMetadata.openGraph ?? {};
   const baseTw = appMetadata.twitter ?? {};
 
@@ -90,7 +88,6 @@ export const pageMetadata = ({
   return {
     ...appMetadata,
 
-    // Title template korunur, sadece default değişir
     title: { ...baseTitle, default: title },
 
     description: finalDescription,

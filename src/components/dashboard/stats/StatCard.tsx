@@ -23,7 +23,6 @@ export const StatCard = ({
         "hover:-translate-y-0.5",
         "focus-within:-translate-y-0.5",
         isPrimary ? "bg-granite-dark" : "bg-surface-2",
-        // shadow (hover)
         isPrimary
           ? "hover:shadow-lg hover:shadow-black/20"
           : "hover:shadow-lg hover:shadow-black/10",

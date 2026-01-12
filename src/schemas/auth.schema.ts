@@ -1,6 +1,6 @@
 import { z } from "zod";
 
-// SIGNUP
+// #region signup
 
 export const signUpSchema = z.object({
   fullName: z
@@ -49,7 +49,9 @@ export const signupErrorSchema = z.object({
 
 export type TSignupError = z.infer<typeof signupErrorSchema>;
 
-// SIGNIN
+// #endregion signup
+
+// #region signin
 
 export const signInSchema = z.object({
   email: z.email("Please enter a valid email."),
@@ -105,7 +107,9 @@ export const loginErrorSchema = z.object({
 
 export type TLoginError = z.infer<typeof loginErrorSchema>;
 
-// LOGOUT
+// #endregion signin
+
+// #region logout
 
 export const logoutSuccessSchema = z.object({
   success: z.literal(true),
@@ -123,7 +127,9 @@ export const logoutErrorSchema = z.object({
 
 export type TLogoutError = z.infer<typeof logoutErrorSchema>;
 
-// PROFILE
+// #endregion logout
+
+// #region profile
 
 export const profileSuccessSchema = z.object({
   success: z.literal(true),
@@ -152,7 +158,9 @@ export const profileErrorSchema = z.object({
 export type TProfileError = z.infer<typeof profileErrorSchema>;
 export type TProfileUser = z.infer<typeof profileSuccessSchema>["data"];
 
-// REFRESH
+// #endregion profile
+
+// #region refresh
 
 export const refreshSuccessSchema = z.object({
   success: z.literal(true),
@@ -174,3 +182,5 @@ export const refreshErrorSchema = z.object({
 });
 
 export type TRefreshError = z.infer<typeof refreshErrorSchema>;
+
+// #endregion refresh

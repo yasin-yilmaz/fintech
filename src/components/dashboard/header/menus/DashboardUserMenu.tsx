@@ -29,7 +29,6 @@ export const DashboardUserMenu = ({
 }: TProps) => {
   const panelRef = useRef<HTMLDivElement | null>(null);
 
-  // "Modal açık mı?" state'i yerine sadece niyet tutuyoruz
   const [confirmRequested, setConfirmRequested] = useState(false);
   const isConfirmOpen = isOpen && confirmRequested;
 
@@ -124,7 +123,7 @@ export const DashboardUserMenu = ({
             </div>
           </div>
 
-          {/* ITEMS */}
+          {/* items */}
           <div className="p-2">
             {[
               { label: "Profile", icon: User },

@@ -56,7 +56,6 @@ export const WorkingCapitalChart = ({ view, className }: Props) => {
   return (
     <div className={cn("max-w-full min-w-0", className)}>
       {/* legend + range */}
-
       <div className="max-w-full min-w-0">
         <div
           className={cn(

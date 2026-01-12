@@ -33,7 +33,7 @@ export const metadata: Metadata = pageMetadata({
 const DashboardPage = () => {
   return (
     <section className="grid min-w-0 grid-cols-12 gap-x-4 gap-y-6 md:gap-x-9.75 md:gap-y-8">
-      {/* LEFT */}
+      {/* left */}
       <div className="col-span-12 grid min-w-0 gap-8 xl:col-span-8">
         <Suspense fallback={<StatCardsSkeleton />}>
           <StatCards />
@@ -47,7 +47,7 @@ const DashboardPage = () => {
         </Suspense>
       </div>
 
-      {/* RIGHT */}
+      {/* right */}
       <div className="col-span-12 grid min-w-0 content-start gap-8 xl:col-span-4">
         <Suspense fallback={<WalletPanelSkeleton />}>
           <WalletPanel />

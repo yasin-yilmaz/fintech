@@ -13,9 +13,9 @@ const RecentTransactionsSkeleton = ({ rows }: Props) => {
             <div className="bg-surface-2 size-10 animate-pulse rounded-xl" />
 
             <div className="min-w-0 space-y-2">
-              {/* title line */}
+              {/* title */}
               <div className="bg-border-soft h-4 w-40 animate-pulse rounded" />
-              {/* subtitle line */}
+              {/* subtitle */}
               <div className="bg-border-soft/60 h-3 w-56 animate-pulse rounded" />
             </div>
           </div>
@@ -23,7 +23,7 @@ const RecentTransactionsSkeleton = ({ rows }: Props) => {
           <div className="space-y-2 text-right">
             {/* amount */}
             <div className="bg-border-soft h-4 w-24 animate-pulse rounded" />
-            {/* date/status */}
+            {/* date - status */}
             <div className="bg-border-soft/60 h-3 w-16 animate-pulse rounded" />
           </div>
         </div>
