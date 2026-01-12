@@ -4,6 +4,9 @@ import type { ElementType } from "react";
 import { useState } from "react";
 
 import { LogOut } from "lucide-react";
+import { usePathname } from "next/navigation";
+
+import { getActiveKeyFromPath } from "@/lib/utils";
 
 import { ConfirmModal } from "@/components/ui/ConfirmModal";
 import { useLogout } from "@/hooks/useLogout";
@@ -26,6 +29,8 @@ type TProps = {
 
 export const SidebarActions = ({ items }: TProps) => {
   const [confirmRequested, setConfirmRequested] = useState(false);
+  const pathname = usePathname();
+  const activeKey = getActiveKeyFromPath(pathname);
 
   const { logout, isLoggingOut } = useLogout({
     redirectTo: "/signin",
@@ -41,6 +46,7 @@ export const SidebarActions = ({ items }: TProps) => {
             href={item.href}
             label={item.label}
             icon={item.icon}
+            isActive={item.href === pathname}
           />
         ))}
 
