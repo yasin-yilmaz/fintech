@@ -12,7 +12,12 @@ import { SidebarActions } from "./SidebarActions";
 import { SidebarNav, type TSidebarNavItem } from "./SidebarNav";
 
 const ACTION_ITEMS = [
-  { type: "link" as const, href: "/help", label: "Help", icon: HelpIcon },
+  {
+    type: "link" as const,
+    href: "/dashboard/help",
+    label: "Help",
+    icon: HelpIcon,
+  },
 ];
 
 const NAV_ITEMS: TSidebarNavItem[] = [
@@ -20,19 +25,30 @@ const NAV_ITEMS: TSidebarNavItem[] = [
   {
     key: "transactions",
     label: "Transactions",
-    href: "#",
+    href: "/dashboard/transactions",
     icon: TransactionsIcon,
   },
-  { key: "invoices", label: "Invoices", href: "#", icon: InvoicesIcon },
-  { key: "wallets", label: "My Wallets", href: "#", icon: WalletsIcon },
-  { key: "settings", label: "Settings", href: "#", icon: SettingsIcon },
+  {
+    key: "invoices",
+    label: "Invoices",
+    href: "/dashboard/invoices",
+    icon: InvoicesIcon,
+  },
+  {
+    key: "wallets",
+    label: "My Wallets",
+    href: "/dashboard/wallets",
+    icon: WalletsIcon,
+  },
+  {
+    key: "settings",
+    label: "Settings",
+    href: "/dashboard/settings",
+    icon: SettingsIcon,
+  },
 ];
 
-type Props = {
-  activeKey?: string;
-};
-
-export const DashboardSidebarContent = ({ activeKey = "dashboard" }: Props) => {
+export const DashboardSidebarContent = () => {
   return (
     <div className="sticky top-0 flex h-dvh w-62.5 flex-col px-6.25 py-7.5">
       <div className="flex items-center">
@@ -40,7 +56,7 @@ export const DashboardSidebarContent = ({ activeKey = "dashboard" }: Props) => {
       </div>
 
       <div className="mt-10 flex flex-1 flex-col">
-        <SidebarNav items={NAV_ITEMS} activeKey={activeKey} />
+        <SidebarNav items={NAV_ITEMS} />
 
         <div className="mt-auto pb-10">
           <SidebarActions items={ACTION_ITEMS} />
@@ -50,10 +66,10 @@ export const DashboardSidebarContent = ({ activeKey = "dashboard" }: Props) => {
   );
 };
 
-export const DashboardSidebar = ({ activeKey = "dashboard" }: Props) => {
+export const DashboardSidebar = () => {
   return (
     <aside className="bg-surface-2 hidden md:block">
-      <DashboardSidebarContent activeKey={activeKey} />
+      <DashboardSidebarContent />
     </aside>
   );
 };

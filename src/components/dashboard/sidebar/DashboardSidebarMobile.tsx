@@ -9,9 +9,7 @@ import { useUIStore } from "@/store/ui.store";
 
 import { DashboardSidebarContent } from "./DashboardSidebar";
 
-type Props = { activeKey?: string };
-
-export const DashboardSidebarMobile = ({ activeKey = "dashboard" }: Props) => {
+export const DashboardSidebarMobile = () => {
   const pathname = usePathname();
   const isOpen = useUIStore((state) => state.isSidebarOpen);
   const close = useUIStore((state) => state.closeSidebar);
@@ -68,7 +66,7 @@ export const DashboardSidebarMobile = ({ activeKey = "dashboard" }: Props) => {
             exit={{ x: "-100%" }}
             transition={{ type: "tween", duration: 0.22, ease: "easeOut" }}
           >
-            <DashboardSidebarContent activeKey={activeKey} />
+            <DashboardSidebarContent />
           </motion.aside>
         </motion.div>
       ) : null}

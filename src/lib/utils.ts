@@ -10,3 +10,12 @@ export const normalizeSrc = (
   const s = (src ?? "").trim();
   return s.length > 0 ? s : fallback;
 };
+
+export const getActiveKeyFromPath = (pathname: string) => {
+  if (pathname === "/dashboard") return "dashboard";
+
+  const parts = pathname.split("?")[0].split("#")[0].split("/").filter(Boolean);
+
+  const key = parts[1] ?? "dashboard";
+  return key;
+};

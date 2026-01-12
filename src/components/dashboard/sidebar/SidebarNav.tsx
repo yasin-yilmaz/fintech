@@ -1,5 +1,9 @@
 import type { ElementType } from "react";
 
+import { usePathname } from "next/navigation";
+
+import { getActiveKeyFromPath } from "@/lib/utils";
+
 import { SidebarNavItem } from "./SidebarNavItem";
 
 export type TSidebarNavItem = {
@@ -11,10 +15,12 @@ export type TSidebarNavItem = {
 
 type TProps = {
   items: TSidebarNavItem[];
-  activeKey?: string;
 };
 
-export const SidebarNav = ({ items, activeKey }: TProps) => {
+export const SidebarNav = ({ items }: TProps) => {
+  const pathname = usePathname();
+  const activeKey = getActiveKeyFromPath(pathname);
+
   return (
     <nav className="space-y-0.5">
       {items.map((item) => (
